@@ -1,0 +1,15 @@
+contas bancárias
+crie uma classe contabancária uma conta bancária tem um número o cpf do titular e um saldo 
+crie um programa teste que leia dados de contas bancárias de um arquivo texto uma conta em cada linha no formato número cpf saldo inicial
+loja de jogos
+crie uma classe jogo digital um jogo tem um código identificador um nome uma plataforma seu ano de lançamento e seu preço atual  
+crie um programa teste que leia dados de jogos de um arquivo texto um jogo em cada linha no formato idjogo nomejogo plataforma anolançamento preço
+minhas séries
+crie uma classe serie uma série tem um código identificador um nome sua data de lançamento e o número total de episódios  
+crie um programa teste que leia dados de séries de um arquivo texto uma série em cada linha no formato nome datadelançamento númerototaldeepisódios
+eleição
+crie uma classe eleitor cada eleitor tem o número do título eleitoral seu nome sua zona eleitoral e sua seção de votação ele deve ter ainda um atributo que permita saber se ele compareceu à última eleição 
+crie um programa teste que leia dados de eleitores de um arquivo texto um eleitor em cada linha no formato númerodotítulo nome zona seção
+mini-google
+crie uma classe termo um termo é uma palavra acompanhada de quantas vezes ela ocorreu em um documento  
+crie um programa teste que leia linhas de um arquivo texto e preencha dados de termos em cada linha do arquivo texto teremos várias palavras sempre separadas por espaço em branco.

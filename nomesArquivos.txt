@@ -1,0 +1,4 @@
+3
+textoTeste1.txt
+textoTeste2.txt
+textoTeste3.txt
