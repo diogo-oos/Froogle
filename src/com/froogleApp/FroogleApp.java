@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class FroogleApp {
-	// DECLARANDO VARIAVEIS GLOBAIS->>
+	// DECLARANDO VARIAVEIS GLOBAISaaa->>
 
 	static final String nomesDeArquivos = "nomesArquivos.txt";// Nome do arquivo que tem os nomes dos arquivos usados
 																// para execução
