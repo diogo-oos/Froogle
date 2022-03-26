@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class FroogleApp {
 	//DECLARANDO VARIAVEIS GLOBAIS->>
 	
-	static final String nomesDeArquivos = "nomeArquivos.txt";//Nome do arquivo que tem os nomes dos arquivos usados para execução
+	static final String nomesDeArquivos = "nomesArquivos.txt";//Nome do arquivo que tem os nomes dos arquivos usados para execução
 	
 	static final String arquivoTermos = "termos.txt";//Nome do arquivo que contem todos os termos catalogados
 	
