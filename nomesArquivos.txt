@@ -1,0 +1,6 @@
+5
+textoTeste1.txt
+textoTeste2.txt
+textoTeste3.txt
+textoTeste4.txt
+textoTeste5.txt
