@@ -1,4 +1,4 @@
-package com.classJava;
+package classes;
 /**
  * Classe Lista Duplamente Encadeada
  * - em desenvolvimento

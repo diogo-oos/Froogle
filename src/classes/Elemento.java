@@ -1,4 +1,4 @@
-package com.classJava;
+package classes;
 /**
  * Nó que auxilia as verificações da lista
  *Em desenvolvimento

@@ -1,11 +1,12 @@
-package com.froogleApp;
+package froogleApp;
 
-import com.classJava.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import classes.*;
 
 public class FroogleApp {
 	// DECLARANDO VARIAVEIS GLOBAIS->>

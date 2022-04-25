@@ -1,4 +1,4 @@
-package com.classJava;
+package classes;
 
 public class Documento {
     public int Id;
