@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import classes.*;
+import classes.Termo;
 
 public class FroogleApp {
 	// DECLARANDO VARIAVEIS GLOBAIS->>
