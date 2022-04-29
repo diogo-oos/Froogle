@@ -216,12 +216,16 @@ public class ListaDE {
         tamanho--;
         return procurado.dado;
     }
-    public void imprimeTermo(){
+
+    public String toString() {
+        String imprime = "==============/ Termos Armazenados /==============";
         Elemento exibir = inicio;
-        System.out.println("==============/ Termos Armazenados /==============");
-        while(exibir!=null){
-            System.out.println("==> " + exibir.dado + "\n");
+        while (exibir != null) {
+            imprime += "ID da palavra: " + exibir.dado.id + "\nNome do Termo: " + exibir.dado.palavra
+                    + "\nFrequencia que aparece: " + exibir.dado.repeticao + "Documentos que ela aparece: "
+                    + exibir.dado.documento;
             exibir = exibir.proximo;
-        } 
+        }
+        return imprime;
     }
 }
