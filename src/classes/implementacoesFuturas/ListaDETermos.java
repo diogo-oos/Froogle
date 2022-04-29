@@ -1,13 +1,15 @@
-package classes;
+package classes.implementacoesFuturas;
+
+import classes.Termo;
 
 /**
  * Classe Lista Duplamente Encadeada
  * fonte: https://www.youtube.com/watch?v=gx8LtrOC278
  * https://www.youtube.com/watch?v=oDAfNY_duZQ
  */
-public class ListaDE {
-    public Elemento inicio = null;
-    public Elemento fim = null;
+public class ListaDETermos {
+    public ElementoTermo inicio = null;
+    public ElementoTermo fim = null;
     public int tamanho = 0;// controlador de quantidae de elementos existentes na lista, apenas informativo
 
     public boolean verificaVazio() {
@@ -24,7 +26,7 @@ public class ListaDE {
         /**
          * se a verificação retornar falso, então quer dizer que a lista não etá vazia
          */
-        Elemento novo = new Elemento();// instanciando novo elemento (espaço)
+        ElementoTermo novo = new ElementoTermo();// instanciando novo elemento (espaço)
         novo.dado = termo; // informando que agora tenho um dado que prcisa ser guardado
         novo.anterior = null;// informando que não tem ninguém antes dele
         novo.proximo = inicio;// informando que o proximo elemento é o inicio, ou seja, estamos colocando um
@@ -65,7 +67,7 @@ public class ListaDE {
 
     /** inserir dado (Termo) no fim da lista */
     public void inserirDadoNoFim(Termo termo) {
-        Elemento novo = new Elemento();// criando espaço para armazenar informação
+        ElementoTermo novo = new ElementoTermo();// criando espaço para armazenar informação
         novo.dado = termo;// inserindo informação no espaço gerado
         novo.proximo = null;// flexando o ponteiro para o vazio
         novo.anterior = fim;// informando o novo elemento estará no fim d a lista (isso é mais proximo da
@@ -135,7 +137,7 @@ public class ListaDE {
                   * e se nenhum dos dois casos forem usados, então quer dizer que o elemento será
                   * inserido no meio da lista
                   */
-            Elemento auxiliar = inicio;
+            ElementoTermo auxiliar = inicio;
             /**
              * criando um auxiliar que vai ajudar a fazer as conexões, ele começará no
              * inicio da lista
@@ -147,7 +149,7 @@ public class ListaDE {
             for (int i = 0; i < indice - 1; i++) {
                 auxiliar = auxiliar.proximo;// apontando o aux para o proximo lemento na lista
             }
-            Elemento novo = new Elemento();// instanciando o novo elemento
+            ElementoTermo novo = new ElementoTermo();// instanciando o novo elemento
             novo.dado = termo;// informo que esse novo elemento tera as infos do termo que estou passando como
                               // parametro
             novo.anterior = auxiliar;// vou falar que ponteiro que aponta para o elemento anterior agora vai pontar
@@ -191,7 +193,7 @@ public class ListaDE {
          * posicao é feita utilizando
          * uma variavel de controle chamada de "tamanho"
          */
-        Elemento procurado = inicio;
+        ElementoTermo procurado = inicio;
         for (int i = 0; i < indice; i++) {
             procurado = procurado.proximo;// apontando meu Elemento aux de procura para o proximo, ele está procurando
                                           // até achar a posicao desejada
@@ -219,7 +221,7 @@ public class ListaDE {
 
     public String toString() {
         String imprime = "==============/ Termos Armazenados /==============";
-        Elemento exibir = inicio;
+        ElementoTermo exibir = inicio;
         while (exibir != null) {
             imprime += "ID da palavra: " + exibir.dado.id + "\nNome do Termo: " + exibir.dado.palavra
                     + "\nFrequencia que aparece: " + exibir.dado.repeticao + "Documentos que ela aparece: "

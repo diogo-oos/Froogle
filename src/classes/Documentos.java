@@ -1,11 +1,11 @@
 package classes;
 
-public class Documento {
+public class Documentos {
     public int Id;
     public String titulo;
     //public String urlDoc; implementar caso se decidar utilizar documentos da web
 
-    public Documento (int Id, String titulo) {
+    public Documentos (int Id, String titulo) {
         this.Id = Id;
         this.titulo = titulo;
     }
