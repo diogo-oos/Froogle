@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import classes.Termo;
+import classes.Documentos;
 
 public class FroogleApp {
 	// DECLARANDO VARIAVEIS GLOBAIS->>
@@ -36,9 +37,9 @@ public class FroogleApp {
 	 * @param leitor -> variável scanner para leitura do arquivo
 	 * @return vetor de termos com todos os termos criados
 	 */
-	public static Termo[] criarTermos(String nomesArquivos) throws FileNotFoundException {
+	public static Termo[] criarTermos(Documentos nomesArquivos) throws FileNotFoundException {
 
-		Scanner leitor = new Scanner(new File(nomesArquivos));
+		Scanner leitor = new Scanner(new File(nomesArquivos.titulo));
 
 		// variavel para receber as posições das palavras que se repetirem, quando as
 		// mesmas forem encontradas
@@ -72,7 +73,8 @@ public class FroogleApp {
 				}
 
 				if (bPalavraRepete == false) {
-					Termo novoTermo = new Termo(sPalavras[x], 1, idTermo);// criando objeto termo
+					Termo novoTermo = new Termo(idTermo, sPalavras[x], 1);// criando objeto termo
+					novoTermo.listaDoc.inserirDocNoFim(nomesArquivos);
 					aTermos[posicao] = novoTermo;// vetor de Termos recebe termo criado
 					idTermo += 1;// Acresenta o id do termo em um conforme é criado.
 					// a variável de controle de posição só é atualizada após ser criado um novo
@@ -82,6 +84,9 @@ public class FroogleApp {
 
 				else {
 					aTermos[iPosicaoPalavraRepete].repeticao++;
+					if(!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos.titulo)) {
+						aTermos[iPosicaoPalavraRepete].listaDoc.inserirDocNoFim(nomesArquivos);
+					}
 				}
 			}
 		}
@@ -160,7 +165,7 @@ public class FroogleApp {
 		// verifica se o Termo cadastrado já existe
 		if (buscarTermo(palavra) == -1) {
 
-			Termo novoTermo = new Termo(palavra, 1, idTermo);
+			Termo novoTermo = new Termo(idTermo, palavra, 1);
 			idTermo++;// ADD 1 NA VARIVEL idTermo para ser atribuida no proximo.
 
 			aTermos[posicao] = novoTermo;// acrescenta novo termo criado no vetor Global aTermos.
@@ -205,7 +210,7 @@ public class FroogleApp {
 	 *         serem lidos pelo programa
 	 * @throws FileNotFoundException
 	 */
-	public static String[] carregarNomesDeArquivos() throws FileNotFoundException {
+	public static Documentos[] carregarNomesDeArquivos() throws FileNotFoundException {
 
 		Scanner lerNomes = new Scanner(new File(nomesDeArquivos));// declara scanner para leitura de arquivos
 
@@ -214,7 +219,7 @@ public class FroogleApp {
 
 		qntArquivos = Integer.parseInt(lerNomes.nextLine());// variavel recebe quantidade, primeira linha do arquivo
 
-		String[] nomesArquivos = new String[qntArquivos];// declarando vetor de string para armazenar o nome dos
+		Documentos[] nomesArquivos = new Documentos[qntArquivos];// declarando vetor de string para armazenar o nome dos
 															// arquivos.
 
 		int cont = 0;// variavel de controle para se movimentar pelo vetor de String "nomeArquivos"
@@ -222,7 +227,8 @@ public class FroogleApp {
 		// Laço while para cada linha do arquivo depois da primeira linha, com a
 		// quantidade de arquivos, ser lida
 		while (lerNomes.hasNext()) {
-			nomesArquivos[cont] = lerNomes.nextLine();
+			Documentos novoDoc = new Documentos(cont, lerNomes.nextLine());
+			nomesArquivos[cont] = novoDoc;
 			cont++;// vetor String recebe nome do arquivo
 		}
 
@@ -242,11 +248,11 @@ public class FroogleApp {
 	 *                      aos arquivos a serem carregados.
 	 * @throws FileNotFoundException
 	 */
-	public static void carregarArquivos(String[] nomesArquivos) throws FileNotFoundException {
+	public static void carregarArquivos(Documentos[] nomesArquivos) throws FileNotFoundException {
 
 		// laço for repete para cada String com nome de arquivo no vetor
 		// "nomesArquivos".
-		for (String arq : nomesArquivos) {
+		for (Documentos arq : nomesArquivos) {
 
 			criarTermos(arq);// catalogar e criar termos para cada arquivo passado como parâmetro
 		}
@@ -268,7 +274,7 @@ public class FroogleApp {
 		for (Termo objt : aTermos) {// Para cada termo no vetor de termos
 			if (objt != null)// se o termo for diferente de null
 
-				sc.write(objt.id + ";" + objt.palavra + ";" + objt.repeticao + "\n");// gravar informações dos termos no
+				sc.write(objt.id + ";" + objt.palavra + ";" + objt.repeticao + objt.listaDoc.toString() +"\n");// gravar informações dos termos no
 																						// arquivo
 		}
 
@@ -285,16 +291,13 @@ public class FroogleApp {
 		String[] dataTermos;
 
 		while (lerTermos.hasNext()) {
-			int i = 0;
-
 			dataTermos = lerTermos.nextLine().split(";");
 
-			// Organização no vetor dataTermos
-			// palavra -> posição (1)
-			// repetição -> posição (2)
-			// id do termo -> posição (0)
-			Termo termos = new Termo(dataTermos[i + 1], Integer.parseInt(dataTermos[i + 2]),
-					Integer.parseInt(dataTermos[i]));
+			Termo termos = new Termo(Integer.parseInt(dataTermos[0]), dataTermos[1], Integer.parseInt(dataTermos[2]));
+
+			for (int i = 3; i < dataTermos.length-2; i+=2) {
+				termos.listaDoc.inserirDocNoFim(new Documentos(Integer.parseInt(dataTermos[i]), dataTermos[i+1]));
+			}
 
 			aTermos[posicao] = termos;
 			posicao++;

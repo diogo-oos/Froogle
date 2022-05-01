@@ -219,15 +219,15 @@ public class ListaDETermos {
         return procurado.dado;
     }
 
-    public String toString() {
+    /*public String toString() {
         String imprime = "==============/ Termos Armazenados /==============";
         ElementoTermo exibir = inicio;
         while (exibir != null) {
             imprime += "ID da palavra: " + exibir.dado.id + "\nNome do Termo: " + exibir.dado.palavra
                     + "\nFrequencia que aparece: " + exibir.dado.repeticao + "Documentos que ela aparece: "
-                    + exibir.dado.documento;
+                    + exibir.dado.listaDoc.imprimir();
             exibir = exibir.proximo;
         }
         return imprime;
-    }
+    }*/
 }
