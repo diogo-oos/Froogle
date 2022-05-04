@@ -228,16 +228,21 @@ public class ListaDEDoc {
         //return procurado.dado;
     //}
 
-    /*public String imprimir() {
-        StringBuilder imprime = new StringBuilder("==============/ Aparece nos seguintes documentos /==============");
-        ElementoDoc aux = inicio;
-        while (aux != null) {
-            imprime.append("ID do documento: " + aux.dado.Id + "\nNome do Documento: " + aux.dado.titulo + "\n");
+    public String imprimir() {
+        StringBuilder imprime = new StringBuilder("==============/ Aparece nos seguintes documentos /==============\n");
+        if(verificarVazio()){ 
+            imprime.append("Nenhum documento");
+        }
+        else {
+            ElementoDoc aux = inicio;
+            while (aux != null) {
+                imprime.append("ID do documento: " + aux.dado.Id + "\nNome do Documento: " + aux.dado.titulo + "\n");
                     
-            aux = aux.proximo;
+                aux = aux.proximo;
+            }
         }
         return imprime.toString();
-    }*/
+    }
 
     public boolean verificarSeExisteDoc (String doc) {
         ElementoDoc aux = inicio; 

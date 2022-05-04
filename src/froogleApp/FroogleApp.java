@@ -107,7 +107,7 @@ public class FroogleApp {
 			if (termos != null) {
 				System.out.println("==================================");
 				System.out.println(
-						"\nID: " + termos.id + "\nTermo: " + termos.palavra + "\nRepetições: " + termos.repeticao);
+						"\nID: " + termos.id + "\nTermo: " + termos.palavra + "\nRepetições: " + termos.repeticao + "\n" + termos.listaDoc.imprimir());
 				System.out.println("==================================");
 			}
 		}
@@ -127,10 +127,14 @@ public class FroogleApp {
 	public static String exibirTermo(int pos) {
 
 		// formatando os dados do termo encontrado para poder retorna-lo para o usario.
-		String resultBusca = "=============\nID: " + aTermos[pos].id + "\nTermo: " + aTermos[pos].palavra
-				+ "\nRepete-se: " + aTermos[pos].repeticao + " vezes";
+		StringBuilder resultBusca = new StringBuilder("=============\n");
+		resultBusca.append("ID: " + aTermos[pos].id + "\n");
+		resultBusca.append("Termo: " + aTermos[pos].palavra + "\n");
+		resultBusca.append("Repete-se: " + aTermos[pos].repeticao + " vezes" + "\n");
+		resultBusca.append(aTermos[pos].listaDoc.imprimir());
 
-		return resultBusca;
+		return resultBusca.toString();
+		
 	}
 
 	/**
@@ -295,7 +299,7 @@ public class FroogleApp {
 
 			Termo termos = new Termo(Integer.parseInt(dataTermos[0]), dataTermos[1], Integer.parseInt(dataTermos[2]));
 
-			for (int i = 3; i < dataTermos.length-2; i+=2) {
+			for (int i = 3; i <= dataTermos.length-2; i+=2) {
 				termos.listaDoc.inserirDocNoFim(new Documentos(Integer.parseInt(dataTermos[i]), dataTermos[i+1]));
 			}
 
@@ -446,6 +450,7 @@ public class FroogleApp {
 	 * Metodo para limpar tela antes de aparecer primeiro menu
 	 */
 	public static void limparTela() {
+		System.out.println("\n");
 		System.out.print("\033[H\033[2J");
 		System.out.flush();
 	}
