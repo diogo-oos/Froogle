@@ -8,9 +8,15 @@ import java.util.Scanner;
 
 import classes.Termo;
 import classes.Documentos;
+import classes.HashTable;
+import classes.StopWord;
 
 public class FroogleApp {
 	// DECLARANDO VARIAVEIS GLOBAIS->>
+
+	static final String arqStopWords = "stopWords.txt";
+
+	static HashTable table = new HashTable(97);
 
 	static final String nomesDeArquivos = "nomesArquivos.txt";// Nome do arquivo que tem os nomes dos arquivos usados
 																// para execução
@@ -53,39 +59,41 @@ public class FroogleApp {
 
 			// laço para percorrer todas as palavras da linha
 			for (int x = 0; x < sPalavras.length; x++) {
-				boolean bPalavraRepete = false;// variavel de controle
+				if (table.buscar(sPalavras[x]) == null) {
+					boolean bPalavraRepete = false;// variavel de controle
 
-				int y = 0;// variavel para controlar a leitura do vetor de termos (ideal remover ao
-							// colocar arrayList)
+					int y = 0;// variavel para controlar a leitura do vetor de termos (ideal remover ao
+								// colocar arrayList)
 
-				// laço para percorrer o vetor de termos enquanto ainda existirem termos salvos
-				while (aTermos[y] != null) {
+					// laço para percorrer o vetor de termos enquanto ainda existirem termos salvos
+					while (aTermos[y] != null) {
 
-					if (aTermos[y].palavra.equals(sPalavras[x])) {
+						if (aTermos[y].palavra.equals(sPalavras[x])) {
 
-						bPalavraRepete = true;
-						iPosicaoPalavraRepete = y;
-						break;// para a verificação quando é encontrada uma palavra igual, depois passa pra
-								// próxima
+							bPalavraRepete = true;
+							iPosicaoPalavraRepete = y;
+							break;// para a verificação quando é encontrada uma palavra igual, depois passa pra
+									// próxima
 
+						}
+						y++;
 					}
-					y++;
-				}
 
-				if (bPalavraRepete == false) {
-					Termo novoTermo = new Termo(idTermo, sPalavras[x], 1);// criando objeto termo
-					novoTermo.listaDoc.inserirDocNoFim(nomesArquivos);
-					aTermos[posicao] = novoTermo;// vetor de Termos recebe termo criado
-					idTermo += 1;// Acresenta o id do termo em um conforme é criado.
-					// a variável de controle de posição só é atualizada após ser criado um novo
-					// termo
-					posicao++;
-				}
+					if (bPalavraRepete == false) {
+						Termo novoTermo = new Termo(idTermo, sPalavras[x], 1);// criando objeto termo
+						novoTermo.listaDoc.inserirDocNoFim(nomesArquivos);
+						aTermos[posicao] = novoTermo;// vetor de Termos recebe termo criado
+						idTermo += 1;// Acresenta o id do termo em um conforme é criado.
+						// a variável de controle de posição só é atualizada após ser criado um novo
+						// termo
+						posicao++;
+					}
 
-				else {
-					aTermos[iPosicaoPalavraRepete].repeticao++;
-					if(!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos.titulo)) {
-						aTermos[iPosicaoPalavraRepete].listaDoc.inserirDocNoFim(nomesArquivos);
+					else {
+						aTermos[iPosicaoPalavraRepete].repeticao++;
+						if (!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos.titulo)) {
+							aTermos[iPosicaoPalavraRepete].listaDoc.inserirDocNoFim(nomesArquivos);
+						}
 					}
 				}
 			}
@@ -107,7 +115,8 @@ public class FroogleApp {
 			if (termos != null) {
 				System.out.println("==================================");
 				System.out.println(
-						"\nID: " + termos.id + "\nTermo: " + termos.palavra + "\nRepetições: " + termos.repeticao + "\n" + termos.listaDoc.imprimir());
+						"\nID: " + termos.id + "\nTermo: " + termos.palavra + "\nRepetições: " + termos.repeticao + "\n"
+								+ termos.listaDoc.imprimir());
 				System.out.println("==================================");
 			}
 		}
@@ -134,7 +143,7 @@ public class FroogleApp {
 		resultBusca.append(aTermos[pos].listaDoc.imprimir());
 
 		return resultBusca.toString();
-		
+
 	}
 
 	/**
@@ -224,7 +233,7 @@ public class FroogleApp {
 		qntArquivos = Integer.parseInt(lerNomes.nextLine());// variavel recebe quantidade, primeira linha do arquivo
 
 		Documentos[] nomesArquivos = new Documentos[qntArquivos];// declarando vetor de string para armazenar o nome dos
-															// arquivos.
+		// arquivos.
 
 		int cont = 0;// variavel de controle para se movimentar pelo vetor de String "nomeArquivos"
 
@@ -278,8 +287,12 @@ public class FroogleApp {
 		for (Termo objt : aTermos) {// Para cada termo no vetor de termos
 			if (objt != null)// se o termo for diferente de null
 
-				sc.write(objt.id + ";" + objt.palavra + ";" + objt.repeticao + objt.listaDoc.toString() +"\n");// gravar informações dos termos no
-																						// arquivo
+				sc.write(objt.id + ";" + objt.palavra + ";" + objt.repeticao + objt.listaDoc.toString() + "\n");// gravar
+																												// informações
+																												// dos
+																												// termos
+																												// no
+			// arquivo
 		}
 
 		sc.close();
@@ -299,8 +312,8 @@ public class FroogleApp {
 
 			Termo termos = new Termo(Integer.parseInt(dataTermos[0]), dataTermos[1], Integer.parseInt(dataTermos[2]));
 
-			for (int i = 3; i <= dataTermos.length-2; i+=2) {
-				termos.listaDoc.inserirDocNoFim(new Documentos(Integer.parseInt(dataTermos[i]), dataTermos[i+1]));
+			for (int i = 3; i <= dataTermos.length - 2; i += 2) {
+				termos.listaDoc.inserirDocNoFim(new Documentos(Integer.parseInt(dataTermos[i]), dataTermos[i + 1]));
 			}
 
 			aTermos[posicao] = termos;
@@ -445,6 +458,24 @@ public class FroogleApp {
 		}
 	}
 
+	// #region StopWords
+
+	public static void carregarStopWords(HashTable table) throws IOException {
+		Scanner readder = new Scanner(new File(arqStopWords));
+		String stopWord = "";
+
+		while (readder.hasNextLine()) {
+			stopWord = readder.nextLine();
+			StopWord novoTermoPalavra = new StopWord(stopWord);
+
+			table.inserir(stopWord, novoTermoPalavra);
+		}
+
+		readder.close();
+	}
+
+	// #endregion StopWords
+
 	// #region Menu
 	/**
 	 * Metodo para limpar tela antes de aparecer primeiro menu
@@ -580,6 +611,9 @@ public class FroogleApp {
 		limparTela();
 		// carregar termos catalogados no arquivo texto(termos.txt) para o vetor de
 		// Termos.
+
+		carregarStopWords(table);
+
 		carregarTermosDoArq();
 
 		// chamar Menu do usuario
