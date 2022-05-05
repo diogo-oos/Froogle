@@ -8,15 +8,20 @@ import java.util.Scanner;
 
 import classes.Termo;
 import classes.Documentos;
-import classes.HashTable;
+import classes.HashTableStopWords;
 import classes.StopWord;
 
 public class FroogleApp {
 	// DECLARANDO VARIAVEIS GLOBAIS->>
+	
+	//vetor de pontuações
+	static final String[] pontuacao = {",", ".", "!", "-", "_", ";"};
 
+	//arquivo de StopWords
 	static final String arqStopWords = "stopWords.txt";
 
-	static HashTable table = new HashTable(97);
+	//tabela Hash para StopWords
+	static HashTableStopWords table = new HashTableStopWords(318);
 
 	static final String nomesDeArquivos = "nomesArquivos.txt";// Nome do arquivo que tem os nomes dos arquivos usados
 																// para execução
@@ -42,6 +47,7 @@ public class FroogleApp {
 	 * 
 	 * @param leitor -> variável scanner para leitura do arquivo
 	 * @return vetor de termos com todos os termos criados
+	 * @throws InterruptedException 
 	 */
 	public static Termo[] criarTermos(Documentos nomesArquivos) throws FileNotFoundException {
 
@@ -56,10 +62,20 @@ public class FroogleApp {
 			// vetor para receber as palavras de cada linha do arquivo, separadas por um
 			// espaço em branco
 			String[] sPalavras = leitor.nextLine().split(" ");
-
+		
 			// laço para percorrer todas as palavras da linha
 			for (int x = 0; x < sPalavras.length; x++) {
+				//percorrer pontuações para retirá-las das palavras 
+				for(int i = 0; i < pontuacao.length; i++){
+					if(sPalavras[x].contains(pontuacao[i])){
+						sPalavras[x] = sPalavras[x].substring(0,sPalavras[x].length()-1);
+					}
+				}
+				
+				/*se o retorno for igual a null, significa que essa palavra
+				não esta na tabela de StopWords*/
 				if (table.buscar(sPalavras[x]) == null) {
+				
 					boolean bPalavraRepete = false;// variavel de controle
 
 					int y = 0;// variavel para controlar a leitura do vetor de termos (ideal remover ao
@@ -460,7 +476,7 @@ public class FroogleApp {
 
 	// #region StopWords
 
-	public static void carregarStopWords(HashTable table) throws IOException {
+	public static void carregarStopWords(HashTableStopWords table) throws IOException {
 		Scanner readder = new Scanner(new File(arqStopWords));
 		String stopWord = "";
 
@@ -612,6 +628,7 @@ public class FroogleApp {
 		// carregar termos catalogados no arquivo texto(termos.txt) para o vetor de
 		// Termos.
 
+		//carregamos as StopWords para a Tabela Hash
 		carregarStopWords(table);
 
 		carregarTermosDoArq();

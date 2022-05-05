@@ -1,18 +1,18 @@
 package classes;
 
-public class HashTable {
+public class HashTableStopWords {
     
     public final int tam;   //tamanho da tabela
-    public Entrada[] dados;
+    public EntradaStopWords[] dados;
     public int pesos[];
 
-    public HashTable(int n){
+    public HashTableStopWords(int n){
         this.tam = n;
-        this.dados = new Entrada[tam];
+        this.dados = new EntradaStopWords[tam];
         this.preencherPesos();
 
         for(int i = 0; i < this.tam; i++)
-            dados[i] = new Entrada();   //preenche a tabela com entradas null
+            dados[i] = new EntradaStopWords();   //preenche a tabela com entradas null
     }
 
 
@@ -58,7 +58,7 @@ public class HashTable {
     }
 
     public void inserir(String chave, StopWord novo){
-        Entrada nova = new Entrada(chave, novo);    //cria nova entrada
+        EntradaStopWords nova = new EntradaStopWords(chave, novo);    //cria nova entrada
         int pos = localizar(chave); //localiza a posicao
         dados[pos] = nova;  //posiciona a entrada na respectiva posicao
     }
