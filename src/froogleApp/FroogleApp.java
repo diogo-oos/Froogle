@@ -21,7 +21,7 @@ public class FroogleApp {
 	static final String arqStopWords = "stopWords.txt";
 
 	//tabela Hash para StopWords
-	static HashTableStopWords table = new HashTableStopWords(318);
+	static HashTableStopWords table = new HashTableStopWords(263);
 
 	static final String nomesDeArquivos = "nomesArquivos.txt";// Nome do arquivo que tem os nomes dos arquivos usados
 																// para execução
