@@ -1,13 +1,26 @@
 # Froogle
 
 Apelidado de "Froogle" este projeto foi desenvolvido em grupos para a disciplina de "Algoritmos e Estruturas de Dados" (AED) cursada na PUC Minas Campus São Gabriel em Belo Horizonte, Minas Gerais, Brasil. 
-Os membros do grupo são: Diogo Marques, Leonardo Mamede, Lucas Guilherme, Lucas Lima
+Os membros do grupo são: 
 
-- No projeto trabalhamos habilidades como:
+- Diogo Marques (diogo-oos);
+
+- Leonardo Mamede (xLyMzR);
+
+- Lucas Guilherme (lucasamaralgh);
+
+- Lucas Lima (Lucas-San99).
+
+-----------------------
+
+No projeto trabalhamos habilidades como:
+
 - Utilização e atualização de arquivos
 - Estruturas de Dados
 - Complexidade de algoritmos
 - Algoritmos de ordenação
+
+-----------------------
 
 1ª etapa do projeto:
 
@@ -22,6 +35,8 @@ Estrutura dos arquivos:
 
     TERMO
     IdTermo;Palavra;NúmeroDeOcorrências
+    
+-----------------------
     
 2ª etapa do projeto:
 
