@@ -8,5 +8,9 @@ public class Documentos {
     public Documentos (int Id, String titulo) {
         this.Id = Id;
         this.titulo = titulo;
+
+
+        // TODO => Número de repetições do termo no documento
+
     }
 }

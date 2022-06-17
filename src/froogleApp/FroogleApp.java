@@ -95,7 +95,14 @@ public class FroogleApp {
 						y++;
 					}
 
-					if (bPalavraRepete == false) {
+					if (bPalavraRepete) {
+						aTermos[iPosicaoPalavraRepete].repeticao++;
+						if (!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos.titulo)) {
+							aTermos[iPosicaoPalavraRepete].listaDoc.inserirDocNoFim(nomesArquivos);
+						}
+					}
+
+					else {
 						Termo novoTermo = new Termo(idTermo, sPalavras[x], 1);// criando objeto termo
 						novoTermo.listaDoc.inserirDocNoFim(nomesArquivos);
 						aTermos[posicao] = novoTermo;// vetor de Termos recebe termo criado
@@ -103,13 +110,6 @@ public class FroogleApp {
 						// a variável de controle de posição só é atualizada após ser criado um novo
 						// termo
 						posicao++;
-					}
-
-					else {
-						aTermos[iPosicaoPalavraRepete].repeticao++;
-						if (!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos.titulo)) {
-							aTermos[iPosicaoPalavraRepete].listaDoc.inserirDocNoFim(nomesArquivos);
-						}
 					}
 				}
 			}
@@ -625,34 +625,82 @@ public class FroogleApp {
 
 							case 2:
 								String[] palavrasChave = new String[2];
+								System.out.print("\n=> Deseja utilizar pesos?\n (1) - sim\n (2) - não\n");
 
-								System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
-								palavrasChave[0] = sc.next();
+								int opc4 = sc.nextInt();
 
-								System.out.print("\n=> Entre com a segunda: ");
-								palavrasChave[1] = sc.next();
+								switch (opc4) {// sub-menu pesos
+									case 1:
+										System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
+										palavrasChave[0] = sc.next();
 
-								termoPos = buscarTermo(palavrasChave[0]);
-								if (termoPos != -1) {
-									System.out.println("\nPALAVRA-CHAVE 1: " + palavrasChave[0] +"\n");
-									System.out.println(exibirDocs(termoPos));
-								}
+										System.out.print("\n=> Entre com a segunda: ");
+										palavrasChave[1] = sc.next();
 
-								else {
-									System.out.print("\nPALAVRA-CHAVE 1: "+ palavrasChave[0] + "\nNão aparece em nenhum documento.\n");
-								}
+										termoPos = buscarTermo(palavrasChave[0]);
+										if (termoPos != -1) {
+											System.out.println("\nPALAVRA-CHAVE 1: " + palavrasChave[0] +"\n");
+											System.out.println(exibirDocs(termoPos));
+										}
 
-								termoPos = buscarTermo(palavrasChave[1]);
-								if (termoPos != -1) {
-									System.out.println("\nPALAVRA-CHAVE 2: " + palavrasChave[1] +"\n");
-									System.out.println(exibirDocs(termoPos));
-								}
+										else {
+											System.out.print("\nPALAVRA-CHAVE 1: "+ palavrasChave[0] + "\nNão aparece em nenhum documento.\n");
+										}
 
-								else {
-									System.out.print("\nPALAVRA-CHAVE 2: "+ palavrasChave[1] + "\nNão aparece em nenhum documento.\n");
+										termoPos = buscarTermo(palavrasChave[1]);
+										if (termoPos != -1) {
+											System.out.println("\nPALAVRA-CHAVE 2: " + palavrasChave[1] +"\n");
+											System.out.println(exibirDocs(termoPos));
+										}
+
+										else {
+											System.out.print("\nPALAVRA-CHAVE 2: "+ palavrasChave[1] + "\nNão aparece em nenhum documento.\n");
+										}
+
+										break;
+
+									case 2: 
+										int[] pesos = new int[2];
+										System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
+										palavrasChave[0] = sc.next();
+
+										System.out.print("\n=> Entre com o peso da primeira palavra-chave: ");
+										pesos[0] = sc.nextInt();
+
+										System.out.print("\n=> Entre com a segunda palavra-chave: ");
+										palavrasChave[1] = sc.next();
+
+										System.out.print("\n=> Entre com o peso da segunda palavra-chave: ");
+										pesos[1] = sc.nextInt();
+
+										termoPos = buscarTermo(palavrasChave[0]);
+										if (termoPos != -1) {
+											System.out.println("\nPALAVRA-CHAVE 1: " + palavrasChave[0] +"\n");
+											System.out.println(exibirDocs(termoPos));
+										}
+
+										else {
+											System.out.print("\nPALAVRA-CHAVE 1: "+ palavrasChave[0] + "\nNão aparece em nenhum documento.\n");
+										}
+
+										termoPos = buscarTermo(palavrasChave[1]);
+										if (termoPos != -1) {
+											System.out.println("\nPALAVRA-CHAVE 2: " + palavrasChave[1] +"\n");
+											System.out.println(exibirDocs(termoPos));
+										}
+
+										else {
+											System.out.print("\nPALAVRA-CHAVE 2: "+ palavrasChave[1] + "\nNão aparece em nenhum documento.\n");
+										}
+
+										break;
+									
+									default:
+										System.out.println("Por favor, entre com uma opção valida.");
 								}
 
 								break;
+							// fim do sub-menu
 
 							default:
 								System.out.println("Por favor, entre com uma opção valida.");
