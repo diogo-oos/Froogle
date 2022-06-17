@@ -163,7 +163,22 @@ public class FroogleApp {
 	}
 
 	/**
-	 * 
+	 * Método que formata uma string com a lista de documentos em que uma determinada
+	 * palavra-chave aparece
+	 * @param pos (Posição do termo no vetor de termos (aTermos))
+	 * @return resultBusca (String com a lista de documentos do termo naquela posição)
+	 */
+	public static String exibirDocs(int pos) {
+
+		// formatando os documentos do termo encontrado para poder retorna-lo para o usario.
+		StringBuilder resultBusca = new StringBuilder("");
+		resultBusca.append(aTermos[pos].listaDoc.imprimir());
+
+		return resultBusca.toString();
+
+	}
+
+	/**
 	 * @return nomeArquivos -> array de Strings com o nome de cada arquivo a ser
 	 *         lido.
 	 * @throws FileNotFoundException
@@ -507,24 +522,26 @@ public class FroogleApp {
 		Scanner sc = new Scanner(System.in);
 
 		// variavel de controle para switch
-		int opt = 0;
+		int opc1 = 0;
 
 		// Opções do menu para o usuario.
-		while (opt != 6) {
+		while (opc1 != 7) {
 			System.out.println(
 					"\n======================================\n		FROOGLE \n======================================\n");
 
 			System.out.println("==> MENU PRINCIPAL <==");
 
 			System.out.println("\n1. SALVAR TERMOS CATALOGADOS\n"
-					+ "2. CONSULTAR TERMOS\n3. INSERIR NOVO TERMO\n"
-					+ "4. CARREGAR NOVOS ARQUIVOS E CATALOGAR TERMOS\n" + "5. AJUDA\n" + "6. SAIR");
+					+ "2. CONSULTAR TERMOS\n" + "3. CONSULTAR DOCUMENTOS\n" + "4. INSERIR NOVO TERMO\n"
+					+ "5. CARREGAR NOVOS ARQUIVOS E CATALOGAR TERMOS\n" + "6. AJUDA\n" + "7. SAIR");
 
 			System.out.print("Digite o numero da opção desejada:	");
 
-			opt = sc.nextInt();// opt recebe a opção escolida
+			opc1 = sc.nextInt();// opt recebe a opção escolida
 
-			switch (opt) {// Switch na opção do usuario
+			int termoPos = 0;// receberá a posição dos termos buscados (opções 2 e 3)
+
+			switch (opc1) {// Switch na opção do usuario
 
 				case 1:
 					// escrever os termos no vetor aTermos no arquivo de termos formatado
@@ -539,22 +556,22 @@ public class FroogleApp {
 					System.out.println("\n==> ESCOLHA UMA OPCAO <==");
 					System.out.println("1. Consultar um termo especifico\n2. Ver todos os termos:	");
 
-					int subop = 0;// variavel para controle da opção do sub-menu do usuario
+					int opc2 = 0;// variavel para controle da opção do sub-menu do usuario
 
-					subop = sc.nextInt();
+					opc2 = sc.nextInt();
 
-					switch (subop) {// Switch na opção do usuario
+					switch (opc2) {// Switch na opção do usuario
 
 						case 1:
-							// BUSCA ESPECIFICA DE TERMOS ->
-							String termoDigitado = null;// buscaTermo recebe o termo que o usuario deseja procurar
+							String termoProcurado = null;// o método buscaTermo recebe o termo que o usuario deseja procurar
 
 							System.out.print("\n=> Entre com o termo que deseja buscar:	");
-							termoDigitado = sc.next();// buscaTermo recebe o termo procurado
+							termoProcurado = sc.next();
 
-							int termoPos = 0;
-							termoPos = buscarTermo(termoDigitado);
-							if (termoPos != -1) {// Procura e retorna o termo e seus atributos
+							// Procura e retorna a posição do termo ou -1 se o termo não existir
+							termoPos = buscarTermo(termoProcurado);
+
+							if (termoPos != -1) {
 								System.out.println(exibirTermo(termoPos));
 							}
 
@@ -569,13 +586,82 @@ public class FroogleApp {
 							break;
 
 						default:
-							System.out.println("Por favor, entre com uma opção valida");
+							System.out.println("Por favor, entre com uma opção valida.");
 					}
 
 					break;
 				// FIM SUB-MENU
 
-				case 3:
+				case 3: 
+					// BUSCA POR DOCUMENTOS ->
+
+						// Sub-Menu para escolha de palavras-chave ->
+						System.out.println("\n==> ESCOLHA UMA OPCAO <==");
+						System.out.print("\n=> Você deseja buscar inserindo:\nUma palavra-chave (1)\nDuas palavras-chave (2)\n");
+						
+						int opc3 = 0;
+
+						opc3 = sc.nextInt();
+
+						switch (opc3) {	
+							case 1:
+								String palavraChave = null;// o método buscaTermo recebe o termo que o usuario deseja procurar 
+
+								System.out.print("\n=> Entre com a palavra-chave que deseja buscar nos documentos:	");
+								palavraChave = sc.next();
+
+								// Procura e retorna a posição do termo ou -1 se o termo não existir
+								termoPos = buscarTermo(palavraChave);
+
+								if (termoPos != -1) {
+									System.out.println(exibirDocs(termoPos));
+								}
+
+								else {
+									System.out.print("\nNão aparece em nenhum documento.");
+								}
+
+								break;
+
+							case 2:
+								String[] palavrasChave = new String[2];
+
+								System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
+								palavrasChave[0] = sc.next();
+
+								System.out.print("\n=> Entre com a segunda: ");
+								palavrasChave[1] = sc.next();
+
+								termoPos = buscarTermo(palavrasChave[0]);
+								if (termoPos != -1) {
+									System.out.println("\nPALAVRA-CHAVE 1: " + palavrasChave[0] +"\n");
+									System.out.println(exibirDocs(termoPos));
+								}
+
+								else {
+									System.out.print("\nPALAVRA-CHAVE 1: "+ palavrasChave[0] + "\nNão aparece em nenhum documento.\n");
+								}
+
+								termoPos = buscarTermo(palavrasChave[1]);
+								if (termoPos != -1) {
+									System.out.println("\nPALAVRA-CHAVE 2: " + palavrasChave[1] +"\n");
+									System.out.println(exibirDocs(termoPos));
+								}
+
+								else {
+									System.out.print("\nPALAVRA-CHAVE 2: "+ palavrasChave[1] + "\nNão aparece em nenhum documento.\n");
+								}
+
+								break;
+
+							default:
+								System.out.println("Por favor, entre com uma opção valida.");
+						}
+
+					break;
+				// FIM SUB-MENU
+
+				case 4:
 					/*-> O ARQUIVO CONTENDO OS TERMOS SÓ DEVE SER
 					ATUALIZADO SE FOR ADD UM NOVO TERMO OU TODA VEZ QUE EXECUTAR O PROGRAMA?
 					*/
@@ -587,24 +673,25 @@ public class FroogleApp {
 					inserirTermo(novoTermo);
 					break;
 
-				case 4:
+				case 5:
 					// ler e carregar arquivos catalogando os termos:
 					limparVetor();
 					carregarArquivos(carregarNomesDeArquivos());
 					System.out.print("Termos catalogados!");
 					break;
 
-				case 5:
+				case 6:
 					System.out.print("Na opção 1, você pode salvar os termos catalogados em um arquivo de texto.\n\n");
 					System.out.print("Na opção 2, você pode pesquisar algum termo que desejar.\n\n");
+					System.out.print("Na opção 3, você pode pesquisar algum documentos, inserindo uma ou duas palavras-chave.\n\n");
 					System.out.print(
-							"Na opçao 3, você pode inserir o novo termo. Lembre-se sempre de salvar, na opção 1, anstes de sair.\n\n");
+							"Na opçao 4, você pode inserir o novo termo. Lembre-se sempre de salvar, na opção 1, anstes de sair.\n\n");
 					System.out.print(
-							"Na opção 4, você pode catalogar termos de arquivos, você não precisa fazer isso após salvar os termos.\n"
+							"Na opção 5, você pode catalogar termos de arquivos, você não precisa fazer isso após salvar os termos.\n"
 									+ "Essa opção é necessária quando você adicionar novos arquivos de texto.");
 					break;
 
-				case 6:
+				case 7:
 					limparTela();
 					System.out.println("\n\n==== OBRIGADO POR USAR O FROOGLE ==== > ==== VOLTE SEMPRE ====\n\n");
 					break;
