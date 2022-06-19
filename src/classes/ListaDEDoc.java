@@ -266,7 +266,7 @@ public class ListaDEDoc {
         StringBuilder imprime = new StringBuilder();
         ElementoDoc aux = inicio;
         while (aux != null) {
-            imprime.append(";" + aux.dado.Id + ";" + aux.dado.titulo); 
+            imprime.append(";" + aux.dado.Id + ";" + aux.dado.titulo + ";" + aux.dado.repeticoesNesteDocumento); 
                     
             aux = aux.proximo;
         }

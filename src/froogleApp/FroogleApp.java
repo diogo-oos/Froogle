@@ -23,14 +23,17 @@ public class FroogleApp {
 	//tabela Hash para StopWords
 	static HashTableStopWords table = new HashTableStopWords(263);
 
-	static final String nomesDeArquivos = "nomesArquivos.txt";// Nome do arquivo que tem os nomes dos arquivos usados
-																// para execução
+	// Nome do arquivo que tem os nomes dos arquivos usados para execução
+	static final String nomesDeArquivos = "nomesArquivos.txt";
 
-	static final String arquivoTermos = "termos.txt";// Nome do arquivo que contem todos os termos catalogados
+	// Nome do arquivo que contem todos os termos catalogados
+	static final String arquivoTermos = "termos.txt";
 
-	static int posicao = 0;// variavel para controlar a posição do vetor de termos
+	// variavel para controlar a posição do vetor de termos
+	static int posicao = 0;
 
-	static int idTermo = 0;// varaivel para atribuição de id(identificador) aos Termos
+	// varaivel para atribuição de id(identificador) aos Termos
+	static int idTermo = 0;
 
 	// vetor de termos (ideal trocar por arrayList posteriormente)
 	static Termo[] aTermos = new Termo[1000];
@@ -59,8 +62,9 @@ public class FroogleApp {
 
 		while (leitor.hasNext()) {// enquanto existir linhas para ler...
 
-			// vetor para receber as palavras de cada linha do arquivo, separadas por um
-			// espaço em branco
+			/* vetor para receber as palavras de cada linha do arquivo, separadas por um
+			 * espaço em branco
+			 */
 			String[] sPalavras = leitor.nextLine().split(" ");
 		
 			// laço para percorrer todas as palavras da linha
@@ -72,25 +76,24 @@ public class FroogleApp {
 					}
 				}
 				
-				/*se o retorno for igual a null, significa que essa palavra
-				não esta na tabela de StopWords*/
+				/* se o retorno for igual a null, significa que essa palavra
+				 * não esta na tabela de StopWords
+				 */
 				if (table.buscar(sPalavras[x]) == null) {
 				
 					boolean bPalavraRepete = false;// variavel de controle
 
-					int y = 0;// variavel para controlar a leitura do vetor de termos (ideal remover ao
-								// colocar arrayList)
+					// variavel para controlar a leitura do vetor de termos 
+					int y = 0;
 
 					// laço para percorrer o vetor de termos enquanto ainda existirem termos salvos
 					while (aTermos[y] != null) {
-
 						if (aTermos[y].palavra.equals(sPalavras[x])) {
 
 							bPalavraRepete = true;
 							iPosicaoPalavraRepete = y;
-							break;// para a verificação quando é encontrada uma palavra igual, depois passa pra
-									// próxima
-
+							break;
+							// para a verificação quando é encontrada uma palavra igual, depois passa pra próxima
 						}
 						y++;
 					}
@@ -100,15 +103,19 @@ public class FroogleApp {
 						if (!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos.titulo)) {
 							aTermos[iPosicaoPalavraRepete].listaDoc.inserirDocNoFim(nomesArquivos);
 						}
+						else 
+							aTermos[iPosicaoPalavraRepete].listaDoc.fim.dado.repeticoesNesteDocumento++;
 					}
-
 					else {
 						Termo novoTermo = new Termo(idTermo, sPalavras[x], 1);// criando objeto termo
-						novoTermo.listaDoc.inserirDocNoFim(nomesArquivos);
+						Documentos novoDocumento = new Documentos(nomesArquivos.Id, nomesArquivos.titulo, 1);
+						novoTermo.listaDoc.inserirDocNoFim(novoDocumento);
 						aTermos[posicao] = novoTermo;// vetor de Termos recebe termo criado
-						idTermo += 1;// Acresenta o id do termo em um conforme é criado.
-						// a variável de controle de posição só é atualizada após ser criado um novo
-						// termo
+						idTermo += 1;// Acresenta o id do termo conforme é criado.
+
+						/* a variável de controle de posição só é atualizada após ser criado um novo
+						 * termo
+						 */
 						posicao++;
 					}
 				}
@@ -258,10 +265,9 @@ public class FroogleApp {
 
 		Scanner lerNomes = new Scanner(new File(nomesDeArquivos));// declara scanner para leitura de arquivos
 
-		int qntArquivos = 0;// variavel que armazena a quantidade de arquivos a serem lidos: tal informação
-							// encontra-se na primeira linha do arquivo que contem os nomes dos arquivos.
-
-		qntArquivos = Integer.parseInt(lerNomes.nextLine());// variavel recebe quantidade, primeira linha do arquivo
+		// variavel que armazena a quantidade de arquivos a serem lidos: tal informação
+		//encontra-se na primeira linha do arquivo que contem os nomes dos arquivos.
+		int qntArquivos = Integer.parseInt(lerNomes.nextLine());
 
 		Documentos[] nomesArquivos = new Documentos[qntArquivos];// declarando vetor de string para armazenar o nome dos
 		// arquivos.
@@ -271,7 +277,8 @@ public class FroogleApp {
 		// Laço while para cada linha do arquivo depois da primeira linha, com a
 		// quantidade de arquivos, ser lida
 		while (lerNomes.hasNext()) {
-			Documentos novoDoc = new Documentos(cont, lerNomes.nextLine());
+			// antes de ler os termos dos documentos, eles receberão um número padrão de repetições: 1
+			Documentos novoDoc = new Documentos(cont, lerNomes.nextLine(), 1);
 			nomesArquivos[cont] = novoDoc;
 			cont++;// vetor String recebe nome do arquivo
 		}
@@ -323,7 +330,7 @@ public class FroogleApp {
 																												// dos
 																												// termos
 																												// no
-			// arquivo
+																												// arquivo
 		}
 
 		sc.close();
@@ -343,8 +350,8 @@ public class FroogleApp {
 
 			Termo termos = new Termo(Integer.parseInt(dataTermos[0]), dataTermos[1], Integer.parseInt(dataTermos[2]));
 
-			for (int i = 3; i <= dataTermos.length - 2; i += 2) {
-				termos.listaDoc.inserirDocNoFim(new Documentos(Integer.parseInt(dataTermos[i]), dataTermos[i + 1]));
+			for (int i = 3; i <= dataTermos.length - 3; i += 3) {
+				termos.listaDoc.inserirDocNoFim(new Documentos(Integer.parseInt(dataTermos[i]), dataTermos[i + 1], Integer.parseInt(dataTermos[i + 2])));
 			}
 
 			aTermos[posicao] = termos;
