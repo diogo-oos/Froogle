@@ -5,7 +5,7 @@ package classes;
  * fonte: https://www.youtube.com/watch?v=gx8LtrOC278
  * https://www.youtube.com/watch?v=oDAfNY_duZQ
  */
-public class ListaDEDoc {
+public class ListaDoc {
     public ElementoDoc inicio = null;
     public ElementoDoc fim = null;
     public int tamanho = 0;// controlador de quantidae de elementos existentes na lista, apenas informativo
@@ -266,11 +266,10 @@ public class ListaDEDoc {
         StringBuilder imprime = new StringBuilder();
         ElementoDoc aux = inicio;
         while (aux != null) {
-            imprime.append(";" + aux.dado.Id + ";" + aux.dado.titulo + ";" + aux.dado.repeticoesNesteDocumento); 
+            imprime.append(";" + aux.dado.Id + ";" + aux.dado.titulo + ";" + aux.dado.repeticoesNesteDocOuValorDoDoc); 
                     
             aux = aux.proximo;
         }
         return imprime.toString();
     }
-    
 }

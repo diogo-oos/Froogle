@@ -9,6 +9,7 @@ import java.util.Scanner;
 import classes.Termo;
 import classes.Documentos;
 import classes.HashTableStopWords;
+import classes.ListaDoc;
 import classes.StopWord;
 
 public class FroogleApp {
@@ -56,8 +57,9 @@ public class FroogleApp {
 
 		Scanner leitor = new Scanner(new File(nomesArquivos.titulo));
 
-		// variavel para receber as posições das palavras que se repetirem, quando as
-		// mesmas forem encontradas
+		/* variavel para receber as posições das palavras que se repetirem, quando as
+		 * mesmas forem encontradas
+		 */
 		int iPosicaoPalavraRepete = 0;
 
 		while (leitor.hasNext()) {// enquanto existir linhas para ler...
@@ -104,7 +106,7 @@ public class FroogleApp {
 							aTermos[iPosicaoPalavraRepete].listaDoc.inserirDocNoFim(nomesArquivos);
 						}
 						else 
-							aTermos[iPosicaoPalavraRepete].listaDoc.fim.dado.repeticoesNesteDocumento++;
+							aTermos[iPosicaoPalavraRepete].listaDoc.fim.dado.repeticoesNesteDocOuValorDoDoc++;
 					}
 					else {
 						Termo novoTermo = new Termo(idTermo, sPalavras[x], 1);// criando objeto termo
@@ -122,17 +124,21 @@ public class FroogleApp {
 			}
 		}
 		leitor.close();// fechamento do scanner de arquivo
-		return aTermos;// retorna array de objetos Termos criados / catalogado
+		return aTermos;// retorna array de objetos Termos criados / catalogados
 	}
 
 	/**
-	 * Percorre o vetor de Termos criados e mostra na tela as propriedades ID,
-	 * palavra e quantidade de vezes que ele se repete, da classe Termo.
+	 * Percorre o vetor de Termos criados e mostra na tela as seguinte propriedades
+	 * da classe Termo:
+	 * -> ID;
+	 * -> palavra;
+	 * -> quantidade de vezes que ele se repete;
+	 * -> lista de documetos que esse termo aparece.
 	 * 
 	 * @param aTermos -> vetor de termos criados
+	 * @return void
 	 */
 	public static void mostrarTermos(Termo[] aTermos) {
-		// esse tipo de repetição deverá mudar com arrayList
 		for (Termo termos : aTermos) {
 			// verifica se existe termo na posição
 			if (termos != null) {
@@ -149,15 +155,15 @@ public class FroogleApp {
 	 * Método que formata uma string com os dados do termo da posição passada como
 	 * parâmetro
 	 * no seguinte formato:
-	 * -> (Id do termo)
-	 * -> (Palavra (próprio termo))
-	 * -> (Quantidade de vezes que esse termo se repete)
+	 * -> (Id do termo);
+	 * -> (Palavra (próprio termo));
+	 * -> (Quantidade de vezes que esse termo se repete);
+	 * -> (lista de documetos que esse termo aparece).
 	 * 
 	 * @param pos (Posição do termo no vetor de termos (aTermos))
 	 * @return resultBusca (String com os dados do termo naquela posição)
 	 */
 	public static String exibirTermo(int pos) {
-
 		// formatando os dados do termo encontrado para poder retorna-lo para o usario.
 		StringBuilder resultBusca = new StringBuilder("=============\n");
 		resultBusca.append("ID: " + aTermos[pos].id + "\n");
@@ -166,7 +172,6 @@ public class FroogleApp {
 		resultBusca.append(aTermos[pos].listaDoc.imprimir());
 
 		return resultBusca.toString();
-
 	}
 
 	/**
@@ -176,53 +181,48 @@ public class FroogleApp {
 	 * @return resultBusca (String com a lista de documentos do termo naquela posição)
 	 */
 	public static String exibirDocs(int pos) {
-
 		// formatando os documentos do termo encontrado para poder retorna-lo para o usario.
 		StringBuilder resultBusca = new StringBuilder("");
 		resultBusca.append(aTermos[pos].listaDoc.imprimir());
 
 		return resultBusca.toString();
-
 	}
 
 	/**
-	 * @return nomeArquivos -> array de Strings com o nome de cada arquivo a ser
-	 *         lido.
-	 * @throws FileNotFoundException
+	 * Método que realiza uma busca no vetor de termos baseado na propriedade palavra
+	 * @param termoDigitado -> string (Termo) que se deseja buscar
+	 * @return int contendo a posição do termo procurado no vetor de termos ou -1, 
+	 * caso esse termo não exista
 	 */
 	public static int buscarTermo(String termoDigitado) {
 		int pos = 0;
-
 		for (Termo objto : aTermos) {// para cada objeto no vetor de termos
-
-			if (objto != null && objto.palavra.equals(termoDigitado)) {// se o objto for diferente de null e seu
-																		// atributo palavra for igual o termo procurado.
+			if (objto != null && objto.palavra.equals(termoDigitado)) {
 				// retorna posição do TERMO:
 				return pos;
 			}
 			pos++;
 		}
 
-		// se não encontrar o termo -> retorna uma msg de aviso!
 		return -1;
 	}
 
 	/**
 	 * Cria um novo termo com a palavra digitada pelo usuário
-	 * 
-	 * @param palavra
+	 * @param palavra -> string com a palavra que se deseja alocar na propriedade
+	 * palavra da classe Termo
+	 * @return void
 	 */
 	public static void inserirTermo(String palavra) {
-		// verifica se o Termo cadastrado já existe
+		// verifica se o Termo cadastrado já não existe no vetor de Termos
 		if (buscarTermo(palavra) == -1) {
-
 			Termo novoTermo = new Termo(idTermo, palavra, 1);
-			idTermo++;// ADD 1 NA VARIVEL idTermo para ser atribuida no proximo.
+			idTermo++;// atualiza o id do termo.
 
-			aTermos[posicao] = novoTermo;// acrescenta novo termo criado no vetor Global aTermos.
+			aTermos[posicao] = novoTermo;
 			System.out.print("Termo inserido com sucesso!");
 			System.out.print("\nPalavra: " + aTermos[posicao].palavra + "\nID:" + aTermos[posicao].id);
-			posicao++;// acrescenta 1 em posição para controle do proximo termo cadastrado!.
+			posicao++;// atualiza a variável global de controle de posições do vetor de Termos.
 		}
 
 		else {
@@ -232,18 +232,18 @@ public class FroogleApp {
 
 	/**
 	 * Método que limpa o vetor de termos (aTermos) percorrendo-o e atribuindo o
-	 * valor
-	 * null para cada posição onde antes havia um termo.
+	 * valor null para cada posição onde antes havia um termo.
 	 * No final, zeramos tanto a variável que controla a posição do vetor de termos
 	 * quanto a que controla o id do termo (idTermo)
+	 * @return void
 	 */
 	public static void limparVetor() {
-
 		int i = 0;
 		while (aTermos[i] != null) {
 			aTermos[i] = null;
 			i++;
 		}
+		
 		posicao = 0;
 		idTermo = 0;
 	}
@@ -256,100 +256,100 @@ public class FroogleApp {
 	 * seguinte forma:
 	 * -> linha 1: número com a quantidade de nomes de aquivos
 	 * -> a partir da linha 2: 1 nome de arquivo em cada linha
-	 * 
-	 * @return nomeArquivos -> vetor de Strings contendo os nomes de arquivos a
-	 *         serem lidos pelo programa
-	 * @throws FileNotFoundException
+	 * @return nomeArquivos -> vetor da classe Documentos contendo os nomes de 
+	 * arquivos a serem lidos pelo programa, na propriedade titulo
 	 */
 	public static Documentos[] carregarNomesDeArquivos() throws FileNotFoundException {
 
-		Scanner lerNomes = new Scanner(new File(nomesDeArquivos));// declara scanner para leitura de arquivos
+		Scanner lerNomes = new Scanner(new File(nomesDeArquivos));
 
-		// variavel que armazena a quantidade de arquivos a serem lidos: tal informação
-		//encontra-se na primeira linha do arquivo que contem os nomes dos arquivos.
 		int qntArquivos = Integer.parseInt(lerNomes.nextLine());
 
-		Documentos[] nomesArquivos = new Documentos[qntArquivos];// declarando vetor de string para armazenar o nome dos
-		// arquivos.
+		Documentos[] nomesArquivos = new Documentos[qntArquivos];
 
-		int cont = 0;// variavel de controle para se movimentar pelo vetor de String "nomeArquivos"
+		int cont = 0;
 
-		// Laço while para cada linha do arquivo depois da primeira linha, com a
-		// quantidade de arquivos, ser lida
+		/* laço while para cada linha do arquivo depois da primeira linha, com a
+		 * quantidade de arquivos
+		 */
 		while (lerNomes.hasNext()) {
 			// antes de ler os termos dos documentos, eles receberão um número padrão de repetições: 1
 			Documentos novoDoc = new Documentos(cont, lerNomes.nextLine(), 1);
 			nomesArquivos[cont] = novoDoc;
-			cont++;// vetor String recebe nome do arquivo
+			cont++;
 		}
 
 		lerNomes.close();
 
-		// retorna vetor com os nomes dos arquivos a serem carregados
 		return nomesArquivos;
-
 	}
 
 	/**
 	 * Método que chama outro método para criar termos no vetor aTermos, os termos
-	 * vêm
-	 * das palavras dos arquivos cujo nomes estão no vetor recebido como parâmetro
-	 * 
-	 * @param nomesArquivos recebe vetor de String que contem os nomes referentes
-	 *                      aos arquivos a serem carregados.
-	 * @throws FileNotFoundException
+	 * vêm das palavras dos arquivos cujo nomes estão no vetor recebido como parâmetro
+	 * @param nomesArquivos -> vetor de objetos da classe Documentos que contem os 
+	 * nomes referentes aos arquivos a serem carregados.
+	 * @return void
 	 */
 	public static void carregarArquivos(Documentos[] nomesArquivos) throws FileNotFoundException {
-
-		// laço for repete para cada String com nome de arquivo no vetor
-		// "nomesArquivos".
 		for (Documentos arq : nomesArquivos) {
-
-			criarTermos(arq);// catalogar e criar termos para cada arquivo passado como parâmetro
+			// catalogar e criar termos para cada arquivo passado como parâmetro
+			criarTermos(arq);
 		}
 	}
 
 	/**
-	 * Método que carrega todos os termos encontrados, formata seus atributos e
-	 * coloca em um arquivo
-	 * 
-	 * @throws IOException
+	 * Método que formata as propriedade dos Termos e os salva em um arquivo.
+	 * As propriedade são separadas por um ponto e vírgula (;) 
+	 * São salvos no seguinte formato:
+	 * IdTermo;Termo.palavra;Termo.repetições;
+	 * a partir daí, são gravados os documentos do termo, por isso,
+	 * a quantidade de dados gravados na linha pode variar.
+	 * São gravados da seguinte forma:
+	 * IdDocumento;Documento.títilo;Repetições do termo naquele documento
+	 * @return void
 	 */
 	public static void escreverTermosNoArquivo() throws IOException {
+		// declarando arquivo termos.txt no java
+		File arqTermos = new File(arquivoTermos);
 
-		File arqTermos = new File(arquivoTermos);// declarando arquivo termos.txt no java
+		FileWriter sc = new FileWriter(arqTermos);
 
-		FileWriter sc = new FileWriter(arqTermos);// declarando fileWriter para o arquivo de termos
-		quicksort(aTermos, 0, posicao - 1);// ordena de forma crescente os termos antes de salvar
+		// ordena de forma decrescente os termos antes de salvar
+		quicksort(aTermos, 0, posicao - 1);
 
-		for (Termo objt : aTermos) {// Para cada termo no vetor de termos
-			if (objt != null)// se o termo for diferente de null
-
-				sc.write(objt.id + ";" + objt.palavra + ";" + objt.repeticao + objt.listaDoc.toString() + "\n");// gravar
-																												// informações
-																												// dos
-																												// termos
-																												// no
-																												// arquivo
+		for (Termo objt : aTermos) {
+			if (objt != null)
+				sc.write(objt.id + ";" + objt.palavra + ";" + objt.repeticao + objt.listaDoc.toString() + "\n");
 		}
 
 		sc.close();
-
 	}
 
 	/**
 	 * Método que lê o arquivo de termos e cria um termo para cada linha lida
+	 * @return void
 	 */
 	public static void carregarTermosDoArq() throws IOException {
-		File arqTermos = new File(arquivoTermos);// declarando arquivo termos.txt no java
-		Scanner lerTermos = new Scanner(arqTermos);// Scanner para leitura do arquivo de Termos
+		// declarando arquivo termos.txt no java
+		File arqTermos = new File(arquivoTermos);
+		Scanner lerTermos = new Scanner(arqTermos);
+
 		String[] dataTermos;
 
 		while (lerTermos.hasNext()) {
 			dataTermos = lerTermos.nextLine().split(";");
 
+			// das posições 0 a 2, os dados são fixos
+			// IdTermo;Termo.palavra;Termo.repetições;
 			Termo termos = new Termo(Integer.parseInt(dataTermos[0]), dataTermos[1], Integer.parseInt(dataTermos[2]));
 
+			/* após a posição 2, os dados gravados variam de acordo com a quantidade
+			 * de documentos na lista, naquele determinado termo.
+			 * IdDocumento;Documento.títilo;Repetições do termo naquele documento
+			 * como temos 3 dados para cada documento, o laço abaixo excuta os
+			 * comandos saltando de 3 em 3 posições
+			 */
 			for (int i = 3; i <= dataTermos.length - 3; i += 3) {
 				termos.listaDoc.inserirDocNoFim(new Documentos(Integer.parseInt(dataTermos[i]), dataTermos[i + 1], Integer.parseInt(dataTermos[i + 2])));
 			}
@@ -361,7 +361,9 @@ public class FroogleApp {
 
 		lerTermos.close();
 	}
-	// endregion Arquivos
+	// #endregion Arquivos
+
+	// #region ordenação
 
 	/**
 	 * Método "ordenarVetor" responsavél pela ordenação do array de termos para
@@ -404,10 +406,9 @@ public class FroogleApp {
 	 * Usado no método de particionar do quicksort
 	 * (Essa método é excelente para alternar entre ordenação crescente ou
 	 * decrescente, bastando apenas inverter o sinal da comparação dele)
-	 * 
 	 * @param rep  -> número de repetições dos termos da esquesda ou direita
 	 * @param pivo
-	 * @return -> true ou false
+	 * @return -> boolean 
 	 */
 	public static boolean compRep(int rep, int pivo) {
 		return rep < pivo;
@@ -437,67 +438,85 @@ public class FroogleApp {
 
 	/**
 	 * Método para particionar o vetor (implementação do quicksort)
-	 * 
-	 * @param aTermos (Vetor que se quer ordenar)
-	 * @param start   (início do vetor ou da partição)
-	 * @param end     (término do vetor ou da partição)
-	 * @return inteiro sendo o novo pivô da partição seguinte
+	 * @param aTermos -> Vetor que se quer ordenar
+	 * @param start -> início do vetor ou da partição
+	 * @param end -> término do vetor ou da partição
+	 * @return -> int sendo o novo pivô da partição seguinte
 	 */
 	public static int particionar(Termo aTermos[], int start, int end) {
-
-		int esq, dir; // representam, respectivamente, o início e o final do vetor ou da partição dele
+		// representam, respectivamente, o início e o final do vetor ou da partição dele
+		int esq, dir; 
 		Termo aux, pivot;
-		pivot = aTermos[start]; // variavel pivo recebe a posição do início do vetor ou partição
+
+		// variavel pivo recebe a posição do início do vetor ou partição
+		pivot = aTermos[start]; 
 		esq = start;
 		dir = end;
 		while (esq < dir) { // enquanto o início for menor que o final
 			while (esq < end && !compRep(aTermos[esq].repeticao, pivot.repeticao)) {
-				// avanço a posição da esquerda enquanto a propriedade repetiçao do termo da
-				// esquerda for maior ou igual ao pivô
+				/* avanço a posição da esquerda enquanto a propriedade repetiçao do termo da
+				 * esquerda for maior ou igual ao pivô
+				 */
 				esq++;
 			}
 			while (compRep(aTermos[dir].repeticao, pivot.repeticao)) {
-				// avanço a posição da direita enquanto a propriedade repetiçao do termo da
-				// direita for menor que o pivô
+				/*avanço a posição da direita enquanto a propriedade repetiçao do termo da
+				 * direita for menor que o pivô
+				 */
 				dir--;
 			}
-			// se a esquerda(início) ainda for menor que a direita(final) depois disso,
-			// troco uma pela outra
+			/* se a esquerda(início) ainda for menor que a direita(final) depois disso,
+			 * troco uma pela outra
+			 */
 			if (esq < dir) {
 				aux = aTermos[esq];
 				aTermos[esq] = aTermos[dir];
 				aTermos[dir] = aux;
 			}
 		}
-		// quando a direita for maior ou igual a esquerda, termina o while
-		aTermos[start] = aTermos[dir];// depois disso trocamos o termo no início pelo termo da direita
-		aTermos[dir] = pivot;// o termo da direita recebe o termo do início, que era o pivô
-		return dir;// o pivõ passa a ser a posição da direita, aonde ela parar, essa posição já
-					// está ordenada
-		// à esquerda dessa posição, todo mundo é maior. Já à direita, todo mundo é
-		// menor
+		// depois disso trocamos o termo no início pelo termo da direita
+		aTermos[start] = aTermos[dir];
+
+		// o termo da direita recebe o termo do início, que era o pivô
+		aTermos[dir] = pivot;
+
+		// o pivõ passa a ser a posição da direita, aonde ela parar, essa posição já está ordenada
+		return dir;
+		// à esquerda dessa posição, todo mundo é maior. Já à direita, todo mundo é menor
 	}
 
 	/**
-	 * Implementando a funcao quicksort
-	 * aTermos[] = vetor que esta sendo ordenado
-	 * start = indice inicial
-	 * end = indice final (ultima posição em que se ainda existem termos)
+	 * Método de ordenação quicksort
+	 * @param aTermos[] -> vetor que esta sendo ordenado
+	 * @param start -> indice inicial
+	 * @param end -> indice final (ultima posição em que se ainda existem termos)
+	 * @return void
 	 */
 	public static void quicksort(Termo[] aTermos, int start, int end) {
-		/*
-		 * base da recursividade: quando o fim for maior ou igual ao início
+		/* base da recursividade: quando o fim for maior ou igual ao início
 		 * quando a particão resultar em apenas um elemento
 		 */
 		if (start < end) {
-			int p = particionar(aTermos, start, end); // p é o novo pivô (essa posição já está em seu lugar)
-			quicksort(aTermos, start, p - 1); // ou seja, iremos tentar ordenar as partições à esquesda
-			quicksort(aTermos, p + 1, end); // e à diretia dela
+			// p é o novo pivô (essa posição já está em seu lugar)
+			int p = particionar(aTermos, start, end); 
+
+			// ou seja, iremos tentar ordenar as partições à esquesda
+			quicksort(aTermos, start, p - 1); 
+
+			// e à diretia dela
+			quicksort(aTermos, p + 1, end); 
 		}
 	}
 
+	// #endregion ordenação
+
 	// #region StopWords
 
+	/**
+	 * Método que lê o arquivo de stopword e os adciona à tabela hash de stopwords
+	 * @param table -> tebela hash de strings
+	 * @return void
+	 */
 	public static void carregarStopWords(HashTableStopWords table) throws IOException {
 		Scanner readder = new Scanner(new File(arqStopWords));
 		String stopWord = "";
@@ -516,7 +535,8 @@ public class FroogleApp {
 
 	// #region Menu
 	/**
-	 * Metodo para limpar tela antes de aparecer primeiro menu
+	 * Metodo para limpar tela 
+	 * @return void
 	 */
 	public static void limparTela() {
 		System.out.println("\n");
@@ -524,11 +544,15 @@ public class FroogleApp {
 		System.out.flush();
 	}
 
+	/**
+	 * Método de menu do usuário que chama os métodos do programa de acordo
+	 * com os opções escolhidas pelo usuário
+	 * @return void
+	 */
 	public static void menu() throws IOException {
-		// Scanner para leitura da opção
-		Scanner sc = new Scanner(System.in);
+		Scanner entrada = new Scanner(System.in);
 
-		// variavel de controle para switch
+		// variavel de controle para o primeiro switch
 		int opc1 = 0;
 
 		// Opções do menu para o usuario.
@@ -544,9 +568,10 @@ public class FroogleApp {
 
 			System.out.print("Digite o numero da opção desejada:	");
 
-			opc1 = sc.nextInt();// opt recebe a opção escolida
+			opc1 = entrada.nextInt();// opt recebe a opção escolida
 
-			int termoPos = 0;// receberá a posição dos termos buscados (opções 2 e 3)
+			// receberá a posição dos termos buscados (opções 2 e 3)
+			int termoPos = 0;
 
 			switch (opc1) {// Switch na opção do usuario
 
@@ -562,18 +587,20 @@ public class FroogleApp {
 					// Sub-Menu para consulta de Termos ->
 					System.out.println("\n==> ESCOLHA UMA OPCAO <==");
 					System.out.println("1. Consultar um termo especifico\n2. Ver todos os termos:	");
+					
+					// variavel para controle da opção do sub-menu do usuario
+					int opc2 = 0;
 
-					int opc2 = 0;// variavel para controle da opção do sub-menu do usuario
-
-					opc2 = sc.nextInt();
+					opc2 = entrada.nextInt();
 
 					switch (opc2) {// Switch na opção do usuario
 
 						case 1:
-							String termoProcurado = null;// o método buscaTermo recebe o termo que o usuario deseja procurar
+							// o método buscaTermo recebe o termo que o usuario deseja procurar
+							String termoProcurado = null;
 
 							System.out.print("\n=> Entre com o termo que deseja buscar:	");
-							termoProcurado = sc.next();
+							termoProcurado = entrada.next();
 
 							// Procura e retorna a posição do termo ou -1 se o termo não existir
 							termoPos = buscarTermo(termoProcurado);
@@ -608,14 +635,15 @@ public class FroogleApp {
 						
 						int opc3 = 0;
 
-						opc3 = sc.nextInt();
+						opc3 = entrada.nextInt();
 
 						switch (opc3) {	
 							case 1:
-								String palavraChave = null;// o método buscaTermo recebe o termo que o usuario deseja procurar 
+								// o método buscaTermo recebe o termo que o usuario deseja procurar 
+								String palavraChave = null;
 
 								System.out.print("\n=> Entre com a palavra-chave que deseja buscar nos documentos:	");
-								palavraChave = sc.next();
+								palavraChave = entrada.next();
 
 								// Procura e retorna a posição do termo ou -1 se o termo não existir
 								termoPos = buscarTermo(palavraChave);
@@ -634,15 +662,15 @@ public class FroogleApp {
 								String[] palavrasChave = new String[2];
 								System.out.print("\n=> Deseja utilizar pesos?\n (1) - sim\n (2) - não\n");
 
-								int opc4 = sc.nextInt();
+								int opc4 = entrada.nextInt();
 
 								switch (opc4) {// sub-menu pesos
 									case 1:
 										System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
-										palavrasChave[0] = sc.next();
+										palavrasChave[0] = entrada.next();
 
 										System.out.print("\n=> Entre com a segunda: ");
-										palavrasChave[1] = sc.next();
+										palavrasChave[1] = entrada.next();
 
 										termoPos = buscarTermo(palavrasChave[0]);
 										if (termoPos != -1) {
@@ -667,23 +695,31 @@ public class FroogleApp {
 										break;
 
 									case 2: 
+										ListaDoc listaDocParaImprimir = new ListaDoc();
 										int[] pesos = new int[2];
 										System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
-										palavrasChave[0] = sc.next();
+										palavrasChave[0] = entrada.next();
 
 										System.out.print("\n=> Entre com o peso da primeira palavra-chave: ");
-										pesos[0] = sc.nextInt();
+										pesos[0] = entrada.nextInt();
 
 										System.out.print("\n=> Entre com a segunda palavra-chave: ");
-										palavrasChave[1] = sc.next();
+										palavrasChave[1] = entrada.next();
 
 										System.out.print("\n=> Entre com o peso da segunda palavra-chave: ");
-										pesos[1] = sc.nextInt();
+										pesos[1] = entrada.nextInt();
 
 										termoPos = buscarTermo(palavrasChave[0]);
 										if (termoPos != -1) {
-											System.out.println("\nPALAVRA-CHAVE 1: " + palavrasChave[0] +"\n");
-											System.out.println(exibirDocs(termoPos));
+											String[] documentos = aTermos[termoPos].listaDoc.toString().split(";");
+
+											for(int i = 3; i < documentos.length - 3; i+=3) {
+												int repeticoesNesteDocumento = Integer.parseInt(documentos[i]); 
+												
+												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], repeticoesNesteDocumento * pesos[0]);
+
+												listaDocParaImprimir.inserirDocNoFim(novoDocParaImprimir);
+											}
 										}
 
 										else {
@@ -692,8 +728,15 @@ public class FroogleApp {
 
 										termoPos = buscarTermo(palavrasChave[1]);
 										if (termoPos != -1) {
-											System.out.println("\nPALAVRA-CHAVE 2: " + palavrasChave[1] +"\n");
-											System.out.println(exibirDocs(termoPos));
+											String[] documentos = aTermos[termoPos].listaDoc.toString().split(";");
+
+											for(int i = 3; i < documentos.length - 3; i+=3) {
+												int repeticoesNesteDocumento = Integer.parseInt(documentos[i]); 
+												
+												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], repeticoesNesteDocumento * pesos[0]);
+
+												listaDocParaImprimir.inserirDocNoFim(novoDocParaImprimir);
+											}
 										}
 
 										else {
@@ -723,7 +766,7 @@ public class FroogleApp {
 
 					String novoTermo = null;
 					System.out.print("Insira o termo que deseja adicionar:	");
-					novoTermo = sc.next();
+					novoTermo = entrada.next();
 
 					inserirTermo(novoTermo);
 					break;
@@ -758,7 +801,7 @@ public class FroogleApp {
 
 		} // FIM WHILE
 
-		sc.close();// fecha scanner do Menu
+		entrada.close();// fecha scanner do Menu
 	}
 	// #endregion Menu.
 
@@ -767,12 +810,11 @@ public class FroogleApp {
 	// #region Main
 	public static void main(String[] args) throws IOException {
 		limparTela();
-		// carregar termos catalogados no arquivo texto(termos.txt) para o vetor de
-		// Termos.
 
 		//carregamos as StopWords para a Tabela Hash
 		carregarStopWords(table);
 
+		// carregar termos catalogados no arquivo texto(termos.txt) para o vetor de Termos
 		carregarTermosDoArq();
 
 		// chamar Menu do usuario
@@ -780,4 +822,4 @@ public class FroogleApp {
 
 	}
 	// #endregion Main
-}// fim classe Main
+}
