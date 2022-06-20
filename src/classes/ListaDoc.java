@@ -236,7 +236,7 @@ public class ListaDoc {
         else {
             ElementoDoc aux = inicio;
             while (aux != null) {
-                imprime.append("ID do documento: " + aux.dado.Id + "\nNome do Documento: " + aux.dado.titulo + "\n");
+                imprime.append("ID do documento: " + aux.dado.IdDoc + "\nNome do Documento: " + aux.dado.Titulo + "\n");
                     
                 aux = aux.proximo;
             }
@@ -255,7 +255,7 @@ public class ListaDoc {
              */
             /** esse for vai de 0 até a ultima posicao desejada */
             for (int i = 0; i < tamanho; i++) {
-                if (aux.dado.titulo == doc) return true;
+                if (aux.dado.Titulo == doc) return true;
                 else
                     aux = aux.proximo;// apontando o aux para o proximo lemento na lista
             }
@@ -266,7 +266,7 @@ public class ListaDoc {
         StringBuilder imprime = new StringBuilder();
         ElementoDoc aux = inicio;
         while (aux != null) {
-            imprime.append(";" + aux.dado.Id + ";" + aux.dado.titulo + ";" + aux.dado.repeticoesNesteDocOuValorDoDoc); 
+            imprime.append(";" + aux.dado.IdDoc + ";" + aux.dado.Titulo + ";" + aux.dado.ocorrenciasNesteDocOuValorDoDoc); 
                     
             aux = aux.proximo;
         }

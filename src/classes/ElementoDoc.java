@@ -9,7 +9,7 @@ package classes;
  */
 public class ElementoDoc {
     public ElementoDoc proximo = null;// ponteiro para o elemento anterior
-    public ElementoDoc anterior = null; // ponteiro para o proximo elemento
-    public Documentos dado = null; // dado que será armazenado dentro do elemento (espaço na memoria)
+    public ElementoDoc anterior = null;// ponteiro para o proximo elemento
+    public Documentos dado = null;// dado que será armazenado dentro do elemento (espaço na memoria)
 }
 

@@ -47,15 +47,14 @@ public class FroogleApp {
 	/**
 	 * Método que utiliza uma classe externa chamada Termo,
 	 * lê um arquivo de texto, cria um termo novo para cada palavra
-	 * nova lida e atualiza a quantidade em palavras que se repetem.
-	 * 
+	 * nova lida e atualiza a quantidade em palavras que ele ocorre.
 	 * @param leitor -> variável scanner para leitura do arquivo
 	 * @return vetor de termos com todos os termos criados
 	 * @throws InterruptedException 
 	 */
 	public static Termo[] criarTermos(Documentos nomesArquivos) throws FileNotFoundException {
 
-		Scanner leitor = new Scanner(new File(nomesArquivos.titulo));
+		Scanner leitor = new Scanner(new File(nomesArquivos.Titulo));
 
 		/* variavel para receber as posições das palavras que se repetirem, quando as
 		 * mesmas forem encontradas
@@ -90,7 +89,7 @@ public class FroogleApp {
 
 					// laço para percorrer o vetor de termos enquanto ainda existirem termos salvos
 					while (aTermos[y] != null) {
-						if (aTermos[y].palavra.equals(sPalavras[x])) {
+						if (aTermos[y].Palavra.equals(sPalavras[x])) {
 
 							bPalavraRepete = true;
 							iPosicaoPalavraRepete = y;
@@ -101,16 +100,16 @@ public class FroogleApp {
 					}
 
 					if (bPalavraRepete) {
-						aTermos[iPosicaoPalavraRepete].repeticao++;
-						if (!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos.titulo)) {
+						aTermos[iPosicaoPalavraRepete].NumeroDeOcorrencias++;
+						if (!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos.Titulo)) {
 							aTermos[iPosicaoPalavraRepete].listaDoc.inserirDocNoFim(nomesArquivos);
 						}
 						else 
-							aTermos[iPosicaoPalavraRepete].listaDoc.fim.dado.repeticoesNesteDocOuValorDoDoc++;
+							aTermos[iPosicaoPalavraRepete].listaDoc.fim.dado.ocorrenciasNesteDocOuValorDoDoc++;
 					}
 					else {
 						Termo novoTermo = new Termo(idTermo, sPalavras[x], 1);// criando objeto termo
-						Documentos novoDocumento = new Documentos(nomesArquivos.Id, nomesArquivos.titulo, 1);
+						Documentos novoDocumento = new Documentos(nomesArquivos.IdDoc, nomesArquivos.Titulo, 1);
 						novoTermo.listaDoc.inserirDocNoFim(novoDocumento);
 						aTermos[posicao] = novoTermo;// vetor de Termos recebe termo criado
 						idTermo += 1;// Acresenta o id do termo conforme é criado.
@@ -132,7 +131,7 @@ public class FroogleApp {
 	 * da classe Termo:
 	 * -> ID;
 	 * -> palavra;
-	 * -> quantidade de vezes que ele se repete;
+	 * -> quantidade de vezes que ele ocorre;
 	 * -> lista de documetos que esse termo aparece.
 	 * 
 	 * @param aTermos -> vetor de termos criados
@@ -144,7 +143,7 @@ public class FroogleApp {
 			if (termos != null) {
 				System.out.println("==================================");
 				System.out.println(
-						"\nID: " + termos.id + "\nTermo: " + termos.palavra + "\nRepetições: " + termos.repeticao + "\n"
+						"\nID: " + termos.IdTermo + "\nTermo: " + termos.Palavra + "\nOcorrências: " + termos.NumeroDeOcorrencias + "\n"
 								+ termos.listaDoc.imprimir());
 				System.out.println("==================================");
 			}
@@ -157,7 +156,7 @@ public class FroogleApp {
 	 * no seguinte formato:
 	 * -> (Id do termo);
 	 * -> (Palavra (próprio termo));
-	 * -> (Quantidade de vezes que esse termo se repete);
+	 * -> (Quantidade de vezes que esse termo ocorre);
 	 * -> (lista de documetos que esse termo aparece).
 	 * 
 	 * @param pos (Posição do termo no vetor de termos (aTermos))
@@ -166,9 +165,9 @@ public class FroogleApp {
 	public static String exibirTermo(int pos) {
 		// formatando os dados do termo encontrado para poder retorna-lo para o usario.
 		StringBuilder resultBusca = new StringBuilder("=============\n");
-		resultBusca.append("ID: " + aTermos[pos].id + "\n");
-		resultBusca.append("Termo: " + aTermos[pos].palavra + "\n");
-		resultBusca.append("Repete-se: " + aTermos[pos].repeticao + " vezes" + "\n");
+		resultBusca.append("ID: " + aTermos[pos].IdTermo + "\n");
+		resultBusca.append("Termo: " + aTermos[pos].Palavra + "\n");
+		resultBusca.append("Repete-se: " + aTermos[pos].NumeroDeOcorrencias + " vezes" + "\n");
 		resultBusca.append(aTermos[pos].listaDoc.imprimir());
 
 		return resultBusca.toString();
@@ -197,7 +196,7 @@ public class FroogleApp {
 	public static int buscarTermo(String termoDigitado) {
 		int pos = 0;
 		for (Termo objto : aTermos) {// para cada objeto no vetor de termos
-			if (objto != null && objto.palavra.equals(termoDigitado)) {
+			if (objto != null && objto.Palavra.equals(termoDigitado)) {
 				// retorna posição do TERMO:
 				return pos;
 			}
@@ -221,7 +220,7 @@ public class FroogleApp {
 
 			aTermos[posicao] = novoTermo;
 			System.out.print("Termo inserido com sucesso!");
-			System.out.print("\nPalavra: " + aTermos[posicao].palavra + "\nID:" + aTermos[posicao].id);
+			System.out.print("\nPalavra: " + aTermos[posicao].Palavra + "\nID:" + aTermos[posicao].IdTermo);
 			posicao++;// atualiza a variável global de controle de posições do vetor de Termos.
 		}
 
@@ -273,7 +272,7 @@ public class FroogleApp {
 		 * quantidade de arquivos
 		 */
 		while (lerNomes.hasNext()) {
-			// antes de ler os termos dos documentos, eles receberão um número padrão de repetições: 1
+			// antes de ler os termos dos documentos, eles receberão um número padrão de ocorrências: 1
 			Documentos novoDoc = new Documentos(cont, lerNomes.nextLine(), 1);
 			nomesArquivos[cont] = novoDoc;
 			cont++;
@@ -302,11 +301,11 @@ public class FroogleApp {
 	 * Método que formata as propriedade dos Termos e os salva em um arquivo.
 	 * As propriedade são separadas por um ponto e vírgula (;) 
 	 * São salvos no seguinte formato:
-	 * IdTermo;Termo.palavra;Termo.repetições;
+	 * IdTermo;Termo.palavra;Termo.NumeroDeOcorrencias;
 	 * a partir daí, são gravados os documentos do termo, por isso,
 	 * a quantidade de dados gravados na linha pode variar.
 	 * São gravados da seguinte forma:
-	 * IdDocumento;Documento.títilo;Repetições do termo naquele documento
+	 * IdDocumento;Documento.títilo;Ocorrências do termo naquele documento
 	 * @return void
 	 */
 	public static void escreverTermosNoArquivo() throws IOException {
@@ -320,7 +319,7 @@ public class FroogleApp {
 
 		for (Termo objt : aTermos) {
 			if (objt != null)
-				sc.write(objt.id + ";" + objt.palavra + ";" + objt.repeticao + objt.listaDoc.toString() + "\n");
+				sc.write(objt.IdTermo + ";" + objt.Palavra + ";" + objt.NumeroDeOcorrencias + objt.listaDoc.toString() + "\n");
 		}
 
 		sc.close();
@@ -341,12 +340,12 @@ public class FroogleApp {
 			dataTermos = lerTermos.nextLine().split(";");
 
 			// das posições 0 a 2, os dados são fixos
-			// IdTermo;Termo.palavra;Termo.repetições;
+			// IdTermo;Termo.palavra;Termo.NumeroDeOcorrencias;
 			Termo termos = new Termo(Integer.parseInt(dataTermos[0]), dataTermos[1], Integer.parseInt(dataTermos[2]));
 
 			/* após a posição 2, os dados gravados variam de acordo com a quantidade
 			 * de documentos na lista, naquele determinado termo.
-			 * IdDocumento;Documento.títilo;Repetições do termo naquele documento
+			 * IdDocumento;Documento.títilo;Ocorrências do termo naquele documento
 			 * como temos 3 dados para cada documento, o laço abaixo excuta os
 			 * comandos saltando de 3 em 3 posições
 			 */
@@ -382,7 +381,7 @@ public class FroogleApp {
 	 * 
 	 * if (aTermos[comp + 1] != null && aTermos[comp] != null) {
 	 * 
-	 * if (aTermos[comp + 1].repeticao > aTermos[comp].repeticao) {
+	 * if (aTermos[comp + 1].NumeroDeOcorrencias > aTermos[comp].NumeroDeOcorrencias) {
 	 * 
 	 * aux = aTermos[comp + 1];
 	 * aTermos[comp + 1] = aTermos[comp];
@@ -401,17 +400,16 @@ public class FroogleApp {
 	 */
 
 	/**
-	 * Método de comparação das repetições dos termos da esquesda e direita com o
-	 * pivo
+	 * Método de comparação das ocorrências dos termos da esquesda e direita com o pivo
 	 * Usado no método de particionar do quicksort
 	 * (Essa método é excelente para alternar entre ordenação crescente ou
 	 * decrescente, bastando apenas inverter o sinal da comparação dele)
-	 * @param rep  -> número de repetições dos termos da esquesda ou direita
+	 * @param ocorrencias  -> número de ocorrências dos termos da esquesda ou direita
 	 * @param pivo
 	 * @return -> boolean 
 	 */
-	public static boolean compRep(int rep, int pivo) {
-		return rep < pivo;
+	public static boolean compararOcorrencias(int ocorrencias, int pivo) {
+		return ocorrencias < pivo;
 		/*
 		 * Ordenação decrescente:
 		 * 
@@ -453,14 +451,14 @@ public class FroogleApp {
 		esq = start;
 		dir = end;
 		while (esq < dir) { // enquanto o início for menor que o final
-			while (esq < end && !compRep(aTermos[esq].repeticao, pivot.repeticao)) {
-				/* avanço a posição da esquerda enquanto a propriedade repetiçao do termo da
+			while (esq < end && !compararOcorrencias(aTermos[esq].NumeroDeOcorrencias, pivot.NumeroDeOcorrencias)) {
+				/* avanço a posição da esquerda enquanto a propriedade NumeroDeOcorrencias do termo da
 				 * esquerda for maior ou igual ao pivô
 				 */
 				esq++;
 			}
-			while (compRep(aTermos[dir].repeticao, pivot.repeticao)) {
-				/*avanço a posição da direita enquanto a propriedade repetiçao do termo da
+			while (compararOcorrencias(aTermos[dir].NumeroDeOcorrencias, pivot.NumeroDeOcorrencias)) {
+				/*avanço a posição da direita enquanto a propriedade NumeroDeOcorrencias do termo da
 				 * direita for menor que o pivô
 				 */
 				dir--;
@@ -714,9 +712,9 @@ public class FroogleApp {
 											String[] documentos = aTermos[termoPos].listaDoc.toString().split(";");
 
 											for(int i = 3; i < documentos.length - 3; i+=3) {
-												int repeticoesNesteDocumento = Integer.parseInt(documentos[i]); 
+												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
 												
-												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], repeticoesNesteDocumento * pesos[0]);
+												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
 
 												listaDocParaImprimir.inserirDocNoFim(novoDocParaImprimir);
 											}
@@ -731,9 +729,9 @@ public class FroogleApp {
 											String[] documentos = aTermos[termoPos].listaDoc.toString().split(";");
 
 											for(int i = 3; i < documentos.length - 3; i+=3) {
-												int repeticoesNesteDocumento = Integer.parseInt(documentos[i]); 
+												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
 												
-												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], repeticoesNesteDocumento * pesos[0]);
+												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
 
 												listaDocParaImprimir.inserirDocNoFim(novoDocParaImprimir);
 											}
