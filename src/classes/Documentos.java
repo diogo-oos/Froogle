@@ -11,4 +11,8 @@ public class Documentos {
         this.Titulo = Titulo;
         this.ocorrenciasNesteDocOuValorDoDoc = ocorrenciasNesteDocOuValorDoDoc;
     }
+
+    public String imprimir() {
+        return ("\nID do documento: " + IdDoc + "\nNome do Documento: " + Titulo + "\nValor do documento: " + ocorrenciasNesteDocOuValorDoDoc + "\n");      
+    }
 }

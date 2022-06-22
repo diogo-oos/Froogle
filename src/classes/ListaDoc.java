@@ -104,8 +104,8 @@ public class ListaDoc {
          * verificando se o proximo para onde vou apontar o fim é o vazio ou contem um
          * elemento
          */
-        if (!verificarVazio()) { 
-            fim.proximo = null;// caso o proximo não exista (esteja vazio) então meu proximo elemento seá o
+        if (verificarVazio()) { 
+            fim.proximo = null;// caso o proximo não exista (esteja vazio) então meu proximo elemento será o
                                // vazio
         } else { //isso ocorrerá ao retirarmos o último elemento da lista
             inicio = null;
@@ -271,5 +271,15 @@ public class ListaDoc {
             aux = aux.proximo;
         }
         return imprime.toString();
+    }
+
+    public int tamanho() {
+        int tamanho = 0;
+        ElementoDoc aux = inicio;
+        while (aux != null) {
+            tamanho++; 
+            aux = aux.proximo;
+        }
+        return tamanho;
     }
 }

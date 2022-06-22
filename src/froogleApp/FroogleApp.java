@@ -10,6 +10,7 @@ import classes.Termo;
 import classes.Documentos;
 import classes.HashTableStopWords;
 import classes.ListaDoc;
+import classes.Ordenacao;
 import classes.StopWord;
 
 public class FroogleApp {
@@ -38,6 +39,8 @@ public class FroogleApp {
 
 	// vetor de termos (ideal trocar por arrayList posteriormente)
 	static Termo[] aTermos = new Termo[1000];
+
+	static Ordenacao ordenar = new Ordenacao();
 
 	// ------------------------------------------------------
 
@@ -315,7 +318,7 @@ public class FroogleApp {
 		FileWriter sc = new FileWriter(arqTermos);
 
 		// ordena de forma decrescente os termos antes de salvar
-		quicksort(aTermos, 0, posicao - 1);
+		ordenar.OrdenarTermos(aTermos, 0, posicao - 1);
 
 		for (Termo objt : aTermos) {
 			if (objt != null)
@@ -361,152 +364,6 @@ public class FroogleApp {
 		lerTermos.close();
 	}
 	// #endregion Arquivos
-
-	// #region ordenação
-
-	/**
-	 * Método "ordenarVetor" responsavél pela ordenação do array de termos para
-	 * exbir de forma decrescente.
-	 * OBS: ALGORITMO DE ORDENAÇÃO (BUBBLE) SERÁ SUBSTITUIDO POR UM MAIS EFICIENTE.
-	 * return void;
-	 */
-	/*
-	 * public static void ordenarVetor() {
-	 * int trocas = 0;
-	 * Termo aux = null;
-	 * 
-	 * for (int refe = aTermos.length - 1; refe >= 0; refe--) {
-	 * 
-	 * for (int comp = 0; comp < aTermos.length - 1; comp++) {
-	 * 
-	 * if (aTermos[comp + 1] != null && aTermos[comp] != null) {
-	 * 
-	 * if (aTermos[comp + 1].NumeroDeOcorrencias > aTermos[comp].NumeroDeOcorrencias) {
-	 * 
-	 * aux = aTermos[comp + 1];
-	 * aTermos[comp + 1] = aTermos[comp];
-	 * aTermos[comp] = aux;
-	 * trocas++;
-	 * }
-	 * }
-	 * }
-	 * 
-	 * if (trocas == 0)
-	 * break;
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
-
-	/**
-	 * Método de comparação das ocorrências dos termos da esquesda e direita com o pivo
-	 * Usado no método de particionar do quicksort
-	 * (Essa método é excelente para alternar entre ordenação crescente ou
-	 * decrescente, bastando apenas inverter o sinal da comparação dele)
-	 * @param ocorrencias  -> número de ocorrências dos termos da esquesda ou direita
-	 * @param pivo
-	 * @return -> boolean 
-	 */
-	public static boolean compararOcorrencias(int ocorrencias, int pivo) {
-		return ocorrencias < pivo;
-		/*
-		 * Ordenação decrescente:
-		 * 
-		 * Posição da ESQUERDA:
-		 * retornará o valor negado, ou seja, caso seja maior ou igual ao pivo,
-		 * retornará false, que negado se torna true
-		 * o que acaba fazendo que a posição avance, sem que haja trocas, deixando assim
-		 * as maiores posições à esquerda do pivo.
-		 * caso seja menor, retornará true, que negado se torna false, fazendo assim com
-		 * que essa determinada posição não seja
-		 * atualizada, preparando-a para ser trocada com a posição da direita, quando
-		 * houver a troca, essa posição, que é menor
-		 * que o pivo, seja jogada para a direita dele.
-		 * 
-		 * Posição da Direita:
-		 * Não há negação, ou seja, se for menor, a posição será deixada aonde está, na
-		 * direita do pivo,
-		 * se for maior, ela será preparada para a troca com a posição da esquerda ou
-		 * com o próprio pivo,
-		 * caso esse já esteja em seu devido lugar (isso só ocorre quando a posição da
-		 * direita se torna igual ou menor que a posição da esquerda)
-		 */
-	}
-
-	/**
-	 * Método para particionar o vetor (implementação do quicksort)
-	 * @param aTermos -> Vetor que se quer ordenar
-	 * @param start -> início do vetor ou da partição
-	 * @param end -> término do vetor ou da partição
-	 * @return -> int sendo o novo pivô da partição seguinte
-	 */
-	public static int particionar(Termo aTermos[], int start, int end) {
-		// representam, respectivamente, o início e o final do vetor ou da partição dele
-		int esq, dir; 
-		Termo aux, pivot;
-
-		// variavel pivo recebe a posição do início do vetor ou partição
-		pivot = aTermos[start]; 
-		esq = start;
-		dir = end;
-		while (esq < dir) { // enquanto o início for menor que o final
-			while (esq < end && !compararOcorrencias(aTermos[esq].NumeroDeOcorrencias, pivot.NumeroDeOcorrencias)) {
-				/* avanço a posição da esquerda enquanto a propriedade NumeroDeOcorrencias do termo da
-				 * esquerda for maior ou igual ao pivô
-				 */
-				esq++;
-			}
-			while (compararOcorrencias(aTermos[dir].NumeroDeOcorrencias, pivot.NumeroDeOcorrencias)) {
-				/*avanço a posição da direita enquanto a propriedade NumeroDeOcorrencias do termo da
-				 * direita for menor que o pivô
-				 */
-				dir--;
-			}
-			/* se a esquerda(início) ainda for menor que a direita(final) depois disso,
-			 * troco uma pela outra
-			 */
-			if (esq < dir) {
-				aux = aTermos[esq];
-				aTermos[esq] = aTermos[dir];
-				aTermos[dir] = aux;
-			}
-		}
-		// depois disso trocamos o termo no início pelo termo da direita
-		aTermos[start] = aTermos[dir];
-
-		// o termo da direita recebe o termo do início, que era o pivô
-		aTermos[dir] = pivot;
-
-		// o pivõ passa a ser a posição da direita, aonde ela parar, essa posição já está ordenada
-		return dir;
-		// à esquerda dessa posição, todo mundo é maior. Já à direita, todo mundo é menor
-	}
-
-	/**
-	 * Método de ordenação quicksort
-	 * @param aTermos[] -> vetor que esta sendo ordenado
-	 * @param start -> indice inicial
-	 * @param end -> indice final (ultima posição em que se ainda existem termos)
-	 * @return void
-	 */
-	public static void quicksort(Termo[] aTermos, int start, int end) {
-		/* base da recursividade: quando o fim for maior ou igual ao início
-		 * quando a particão resultar em apenas um elemento
-		 */
-		if (start < end) {
-			// p é o novo pivô (essa posição já está em seu lugar)
-			int p = particionar(aTermos, start, end); 
-
-			// ou seja, iremos tentar ordenar as partições à esquesda
-			quicksort(aTermos, start, p - 1); 
-
-			// e à diretia dela
-			quicksort(aTermos, p + 1, end); 
-		}
-	}
-
-	// #endregion ordenação
 
 	// #region StopWords
 
@@ -701,7 +558,7 @@ public class FroogleApp {
 											for(int i = 3; i < documentos.length; i+=3) {
 												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
 												
-												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
+												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[1]);
 
 												listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
 											}
@@ -710,7 +567,17 @@ public class FroogleApp {
 											System.out.print("\nPALAVRA-CHAVE 2: "+ palavrasChave[1] + "\nNão aparece em nenhum documento.\n");
 										}
 
-										System.err.print(listaDocsParaImprimir.imprimir());
+										Documentos[] arrayDocsParaImprimir = new Documentos[listaDocsParaImprimir.tamanho()];
+										
+										for (int i = 0; i < arrayDocsParaImprimir.length; i++) {
+											arrayDocsParaImprimir[i] = listaDocsParaImprimir.retirarDocDoFim();
+										}
+
+										ordenar.OrdenarDocumentos(arrayDocsParaImprimir, 0, arrayDocsParaImprimir.length-1);
+
+										for (int i = 0; i < arrayDocsParaImprimir.length; i++) {
+											System.out.println(arrayDocsParaImprimir[i].imprimir());
+										}
 
 										break;
 
@@ -806,8 +673,6 @@ public class FroogleApp {
 
 	// #region Main
 	public static void main(String[] args) throws IOException {
-		limparTela();
-
 		//carregamos as StopWords para a Tabela Hash
 		carregarStopWords(table);
 
