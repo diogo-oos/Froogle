@@ -545,8 +545,9 @@ public class FroogleApp {
 												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
 
 												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
-												
-												if (!(listaDocsParaImprimir.verificarSeExisteDoc(novoDocParaImprimir, true)));
+												boolean existeDoc = listaDocsParaImprimir.verificarSeExisteDoc(novoDocParaImprimir, true);
+
+												if (!existeDoc)
 													listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
 											}
 										}
@@ -563,7 +564,9 @@ public class FroogleApp {
 
 												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[1]);
 												
-												if (!(listaDocsParaImprimir.verificarSeExisteDoc(novoDocParaImprimir, true)));
+												boolean existeDoc = listaDocsParaImprimir.verificarSeExisteDoc(novoDocParaImprimir, true);
+
+												if (!existeDoc)
 													listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
 											}
 										}
