@@ -244,7 +244,7 @@ public class ListaDoc {
         return imprime.toString();
     }
 
-    public boolean verificarSeExisteDoc (String doc) {
+    public boolean verificarSeExisteDoc (Documentos doc, boolean atualizarValor) {
         ElementoDoc aux = inicio; 
             /**
              * criando um auxiliar que vai ajudar a fazer as conexões, ele começará no
@@ -255,7 +255,10 @@ public class ListaDoc {
              */
             /** esse for vai de 0 até a ultima posicao desejada */
             for (int i = 0; i < tamanho; i++) {
-                if (aux.dado.Titulo == doc) return true;
+                if (aux.dado.Titulo.equals(doc.Titulo)) {
+                    if (atualizarValor) aux.dado.ocorrenciasNesteDocOuValorDoDoc += doc.ocorrenciasNesteDocOuValorDoDoc;
+                    return true;
+                }
                 else
                     aux = aux.proximo;// apontando o aux para o proximo lemento na lista
             }

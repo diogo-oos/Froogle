@@ -104,7 +104,7 @@ public class FroogleApp {
 
 					if (bPalavraRepete) {
 						aTermos[iPosicaoPalavraRepete].NumeroDeOcorrencias++;
-						if (!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos.Titulo)) {
+						if (!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos, false)) {
 							aTermos[iPosicaoPalavraRepete].listaDoc.inserirDocNoFim(nomesArquivos);
 						}
 						else 
@@ -363,6 +363,7 @@ public class FroogleApp {
 
 		lerTermos.close();
 	}
+
 	// #endregion Arquivos
 
 	// #region StopWords
@@ -523,6 +524,7 @@ public class FroogleApp {
 									case 1:
 										ListaDoc listaDocsParaImprimir = new ListaDoc();
 										int[] pesos = new int[2];
+										int posicaoPalavraChave1, posicaoPalavraChave2;
 										System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
 										palavrasChave[0] = entrada.next();
 
@@ -535,32 +537,34 @@ public class FroogleApp {
 										System.out.print("\n=> Entre com o peso da segunda palavra-chave: ");
 										pesos[1] = entrada.nextInt();
 
-										termoPos = buscarTermo(palavrasChave[0]);
-										if (termoPos != -1) {
-											String[] documentos = aTermos[termoPos].listaDoc.toString().split(";");
+										posicaoPalavraChave1 = buscarTermo(palavrasChave[0]);
+										if (posicaoPalavraChave1 != -1) {
+											String[] documentos = aTermos[posicaoPalavraChave1].listaDoc.toString().split(";");
 
 											for(int i = 3; i < documentos.length; i+=3) {
 												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
-												
-												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
 
-												listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
+												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
+												
+												if (!(listaDocsParaImprimir.verificarSeExisteDoc(novoDocParaImprimir, true)));
+													listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
 											}
 										}
 										else {
 											System.out.print("\nPALAVRA-CHAVE 1: "+ palavrasChave[0] + "\nNão aparece em nenhum documento.\n");
 										}
 
-										termoPos = buscarTermo(palavrasChave[1]);
-										if (termoPos != -1) {
-											String[] documentos = aTermos[termoPos].listaDoc.toString().split(";");
+										posicaoPalavraChave2 = buscarTermo(palavrasChave[1]);
+										if (posicaoPalavraChave2 != -1) {
+											String[] documentos = aTermos[posicaoPalavraChave2].listaDoc.toString().split(";");
 
 											for(int i = 3; i < documentos.length; i+=3) {
 												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
-												
-												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[1]);
 
-												listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
+												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[1]);
+												
+												if (!(listaDocsParaImprimir.verificarSeExisteDoc(novoDocParaImprimir, true)));
+													listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
 											}
 										}
 										else {
