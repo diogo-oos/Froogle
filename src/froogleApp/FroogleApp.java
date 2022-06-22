@@ -664,6 +664,57 @@ public class FroogleApp {
 
 								switch (opc4) {// sub-menu pesos
 									case 1:
+										ListaDoc listaDocsParaImprimir = new ListaDoc();
+										int[] pesos = new int[2];
+										System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
+										palavrasChave[0] = entrada.next();
+
+										System.out.print("\n=> Entre com o peso da primeira palavra-chave: ");
+										pesos[0] = entrada.nextInt();
+
+										System.out.print("\n=> Entre com a segunda palavra-chave: ");
+										palavrasChave[1] = entrada.next();
+
+										System.out.print("\n=> Entre com o peso da segunda palavra-chave: ");
+										pesos[1] = entrada.nextInt();
+
+										termoPos = buscarTermo(palavrasChave[0]);
+										if (termoPos != -1) {
+											String[] documentos = aTermos[termoPos].listaDoc.toString().split(";");
+
+											for(int i = 3; i < documentos.length; i+=3) {
+												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
+												
+												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
+
+												listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
+											}
+										}
+										else {
+											System.out.print("\nPALAVRA-CHAVE 1: "+ palavrasChave[0] + "\nNão aparece em nenhum documento.\n");
+										}
+
+										termoPos = buscarTermo(palavrasChave[1]);
+										if (termoPos != -1) {
+											String[] documentos = aTermos[termoPos].listaDoc.toString().split(";");
+
+											for(int i = 3; i < documentos.length; i+=3) {
+												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
+												
+												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
+
+												listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
+											}
+										}
+										else {
+											System.out.print("\nPALAVRA-CHAVE 2: "+ palavrasChave[1] + "\nNão aparece em nenhum documento.\n");
+										}
+
+										System.err.print(listaDocsParaImprimir.imprimir());
+
+										break;
+
+									case 2:
 										System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
 										palavrasChave[0] = entrada.next();
 
@@ -689,58 +740,6 @@ public class FroogleApp {
 										else {
 											System.out.print("\nPALAVRA-CHAVE 2: "+ palavrasChave[1] + "\nNão aparece em nenhum documento.\n");
 										}
-
-										break;
-
-									case 2: 
-										ListaDoc listaDocParaImprimir = new ListaDoc();
-										int[] pesos = new int[2];
-										System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
-										palavrasChave[0] = entrada.next();
-
-										System.out.print("\n=> Entre com o peso da primeira palavra-chave: ");
-										pesos[0] = entrada.nextInt();
-
-										System.out.print("\n=> Entre com a segunda palavra-chave: ");
-										palavrasChave[1] = entrada.next();
-
-										System.out.print("\n=> Entre com o peso da segunda palavra-chave: ");
-										pesos[1] = entrada.nextInt();
-
-										termoPos = buscarTermo(palavrasChave[0]);
-										if (termoPos != -1) {
-											String[] documentos = aTermos[termoPos].listaDoc.toString().split(";");
-
-											for(int i = 3; i < documentos.length - 3; i+=3) {
-												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
-												
-												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
-
-												listaDocParaImprimir.inserirDocNoFim(novoDocParaImprimir);
-											}
-										}
-
-										else {
-											System.out.print("\nPALAVRA-CHAVE 1: "+ palavrasChave[0] + "\nNão aparece em nenhum documento.\n");
-										}
-
-										termoPos = buscarTermo(palavrasChave[1]);
-										if (termoPos != -1) {
-											String[] documentos = aTermos[termoPos].listaDoc.toString().split(";");
-
-											for(int i = 3; i < documentos.length - 3; i+=3) {
-												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
-												
-												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
-
-												listaDocParaImprimir.inserirDocNoFim(novoDocParaImprimir);
-											}
-										}
-
-										else {
-											System.out.print("\nPALAVRA-CHAVE 2: "+ palavrasChave[1] + "\nNão aparece em nenhum documento.\n");
-										}
-
 										break;
 									
 									default:
