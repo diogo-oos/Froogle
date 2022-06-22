@@ -583,7 +583,23 @@ public class FroogleApp {
 										ordenar.OrdenarDocumentos(arrayDocsParaImprimir, 0, arrayDocsParaImprimir.length-1);
 
 										for (int i = 0; i < arrayDocsParaImprimir.length; i++) {
-											System.out.println(arrayDocsParaImprimir[i].imprimir());
+											if (aTermos[posicaoPalavraChave1].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false) && aTermos[posicaoPalavraChave2].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
+												System.out.println("\nPALAVRA-CHAVE 1: " + aTermos[posicaoPalavraChave1].Palavra + "\nPALAVRA-CHAVE 2: " + aTermos[posicaoPalavraChave2].Palavra + "\n");
+												System.out.println("Aparece ambas no seguinte documento:");
+												System.out.println(arrayDocsParaImprimir[i].imprimir());
+											}
+											else {
+												if (aTermos[posicaoPalavraChave1].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
+													System.out.println("\nPALAVRA-CHAVE 1: " + aTermos[posicaoPalavraChave1].Palavra);
+													System.out.println("Aparece no seguinte documento");
+													System.out.println(arrayDocsParaImprimir[i].imprimir());
+												}
+												else {
+													System.out.println("\nPALAVRA-CHAVE 2: " + aTermos[posicaoPalavraChave2].Palavra);
+													System.out.println("Aparece no seguinte documento");
+													System.out.println(arrayDocsParaImprimir[i].imprimir());
+												}
+											}
 										}
 
 										break;
