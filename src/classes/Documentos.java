@@ -3,8 +3,10 @@ package classes;
 public class Documentos {
     public int IdDoc;
     public String Titulo;
-    public int ocorrenciasNesteDocOuValorDoDoc;// útil para saber quantas vezes o termo aparece nesse determinado documento
-    //public String urlDoc; implementar caso se decidar utilizar documentos da web
+    /* útil para saber quantas vezes o termo aparece nesse determinado documento
+     * (se comportará como valor do documento quando esse calculo for realizado)
+     */
+    public int ocorrenciasNesteDocOuValorDoDoc;
 
     public Documentos (int IdDoc, String Titulo, int ocorrenciasNesteDocOuValorDoDoc) {
         this.IdDoc = IdDoc;
