@@ -7,7 +7,7 @@ Os membros do grupo são:
 
 - Leonardo Mamede (xLyMzR);
 
-- Lucas Guilherme (lucasamaralgh);
+- Lucas Amaral (lucasamaralgh);
 
 - Lucas Lima (Lucas-San99).
 
