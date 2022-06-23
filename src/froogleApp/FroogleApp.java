@@ -364,6 +364,57 @@ public class FroogleApp {
 		lerTermos.close();
 	}
 
+	/**
+	 * Método para inserir os documentos do termo relacionado à palavra chave inserida
+	 * numa lista de documentos (essa lista contém o valor do documento)
+	 * O cálculo do valor do documento é feito baseado no peso 
+	 * @param lista -> lista da classe documentos
+	 * @param posicaoDoTermo -> posição do termo que contem a palavra-chave inserida
+	 * @param peso -> peso da palavra-chave inserida
+	 */
+	public static void inserirDocNaLista(ListaDoc lista, int posicaoDoTermo, int peso) {
+		String[] documentos = aTermos[posicaoDoTermo].listaDoc.toString().split(";");
+
+		for(int i = 3; i < documentos.length; i+=3) {
+			int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
+
+			Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * peso);
+			boolean existeDoc = lista.verificarSeExisteDoc(novoDocParaImprimir, true);
+
+			if (!existeDoc)
+				lista.inserirDocNoFim(novoDocParaImprimir);
+		}
+	}
+
+	/**
+	 * Método para imprimir vetor de documentos (utilizado n opção 3 do menu 
+	 * ao utilizar pesos para as palavras-chave)
+	 * @param arrayDocsParaImprimir -> array de documentos que se deseja imprimir
+	 * @param posPalavra1 -> posição da palavra-chave 1
+	 * @param posPalavra2 -> posição da palavra-chave 2
+	 */
+	public static void imprimirDocumentos(Documentos[] arrayDocsParaImprimir, int posPalavra1, int posPalavra2) {
+		for (int i = 0; i < arrayDocsParaImprimir.length; i++) {
+			if (aTermos[posPalavra1].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false) && aTermos[posPalavra2].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
+				System.out.println("\nPALAVRA-CHAVE 1: " + aTermos[posPalavra1].Palavra + "\nPALAVRA-CHAVE 2: " + aTermos[posPalavra2].Palavra + "\n");
+				System.out.println("Aparece ambas no seguinte documento:");
+				System.out.println(arrayDocsParaImprimir[i].imprimir());
+			}
+			else {
+				if (aTermos[posPalavra1].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
+					System.out.println("\nPALAVRA-CHAVE 1: " + aTermos[posPalavra1].Palavra + "\n");
+					System.out.println("Aparece no seguinte documento:");
+					System.out.println(arrayDocsParaImprimir[i].imprimir());
+				}
+				else {
+					System.out.println("\nPALAVRA-CHAVE 2: " + aTermos[posPalavra2].Palavra+ "\n");
+					System.out.println("Aparece no seguinte documento:");
+					System.out.println(arrayDocsParaImprimir[i].imprimir());
+				}
+			}
+		}
+	}
+
 	// #endregion Arquivos
 
 	// #region StopWords
@@ -522,9 +573,13 @@ public class FroogleApp {
 
 								switch (opc4) {// sub-menu pesos
 									case 1:
+										/* após o cálculo do valor do documento, ele será adicionado
+										 * nesta lista
+										 */
 										ListaDoc listaDocsParaImprimir = new ListaDoc();
 										int[] pesos = new int[2];
 										int posicaoPalavraChave1, posicaoPalavraChave2;
+
 										System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
 										palavrasChave[0] = entrada.next();
 
@@ -539,17 +594,7 @@ public class FroogleApp {
 
 										posicaoPalavraChave1 = buscarTermo(palavrasChave[0]);
 										if (posicaoPalavraChave1 != -1) {
-											String[] documentos = aTermos[posicaoPalavraChave1].listaDoc.toString().split(";");
-
-											for(int i = 3; i < documentos.length; i+=3) {
-												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
-
-												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[0]);
-												boolean existeDoc = listaDocsParaImprimir.verificarSeExisteDoc(novoDocParaImprimir, true);
-
-												if (!existeDoc)
-													listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
-											}
+											inserirDocNaLista(listaDocsParaImprimir, posicaoPalavraChave1, pesos[0]);
 										}
 										else {
 											System.out.print("\nPALAVRA-CHAVE 1: "+ palavrasChave[0] + "\nNão aparece em nenhum documento.\n");
@@ -557,18 +602,7 @@ public class FroogleApp {
 
 										posicaoPalavraChave2 = buscarTermo(palavrasChave[1]);
 										if (posicaoPalavraChave2 != -1) {
-											String[] documentos = aTermos[posicaoPalavraChave2].listaDoc.toString().split(";");
-
-											for(int i = 3; i < documentos.length; i+=3) {
-												int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
-
-												Documentos novoDocParaImprimir = new Documentos(Integer.parseInt(documentos[i-2]), documentos[i-1], ocorrenciasNesteDocumento * pesos[1]);
-												
-												boolean existeDoc = listaDocsParaImprimir.verificarSeExisteDoc(novoDocParaImprimir, true);
-
-												if (!existeDoc)
-													listaDocsParaImprimir.inserirDocNoFim(novoDocParaImprimir);
-											}
+											inserirDocNaLista(listaDocsParaImprimir, posicaoPalavraChave2, pesos[1]);
 										}
 										else {
 											System.out.print("\nPALAVRA-CHAVE 2: "+ palavrasChave[1] + "\nNão aparece em nenhum documento.\n");
@@ -576,31 +610,14 @@ public class FroogleApp {
 
 										Documentos[] arrayDocsParaImprimir = new Documentos[listaDocsParaImprimir.tamanho()];
 										
+										// passando os documentos da lista para um vetor para ordenar
 										for (int i = 0; i < arrayDocsParaImprimir.length; i++) {
 											arrayDocsParaImprimir[i] = listaDocsParaImprimir.retirarDocDoFim();
 										}
 
 										ordenar.OrdenarDocumentos(arrayDocsParaImprimir, 0, arrayDocsParaImprimir.length-1);
 
-										for (int i = 0; i < arrayDocsParaImprimir.length; i++) {
-											if (aTermos[posicaoPalavraChave1].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false) && aTermos[posicaoPalavraChave2].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
-												System.out.println("\nPALAVRA-CHAVE 1: " + aTermos[posicaoPalavraChave1].Palavra + "\nPALAVRA-CHAVE 2: " + aTermos[posicaoPalavraChave2].Palavra + "\n");
-												System.out.println("Aparece ambas no seguinte documento:");
-												System.out.println(arrayDocsParaImprimir[i].imprimir());
-											}
-											else {
-												if (aTermos[posicaoPalavraChave1].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
-													System.out.println("\nPALAVRA-CHAVE 1: " + aTermos[posicaoPalavraChave1].Palavra);
-													System.out.println("Aparece no seguinte documento");
-													System.out.println(arrayDocsParaImprimir[i].imprimir());
-												}
-												else {
-													System.out.println("\nPALAVRA-CHAVE 2: " + aTermos[posicaoPalavraChave2].Palavra);
-													System.out.println("Aparece no seguinte documento");
-													System.out.println(arrayDocsParaImprimir[i].imprimir());
-												}
-											}
-										}
+										imprimirDocumentos(arrayDocsParaImprimir, posicaoPalavraChave1, posicaoPalavraChave2);
 
 										break;
 
