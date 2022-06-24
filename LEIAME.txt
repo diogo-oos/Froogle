@@ -1,33 +1,23 @@
  COMPONENTES:
- BOTÃO TESTE
-	Chama a execução do método "sample", que desenhará uma curva logarítmica (ver mais sobre o método abaixo). Este botão serve apenas para teste. Pode (e DEVE) ser removido na versão final do seu trabalho.
-	
+ BOTï¿½O TESTE
+	Chama a execuï¿½ï¿½o do mï¿½todo "sample", que desenharï¿½ uma curva logarï¿½tmica (ver mais sobre o mï¿½todo abaixo). Este botï¿½o serve apenas para teste. Pode (e DEVE) ser removido na versï¿½o final do seu trabalho.
  CAIXAS ESCALAX E ESCALAY
-	A área de desenho tem cerca de 800 por 650 pixels. Assim, valores muito maiores ou muito menores do que estes números podem ser difíceis de visualizar (ex, f(x)=x² e x=100).
-	Desta forma, você pode mudar a escala dos eixos X e Y dando valores nestas caixas de texto *antes* de adicionar os pontos ao gráfico.
-	
- CLIQUE NA ÁREA DO GRÁFICO
-	Mostrará, a partir dos pontos inseridos anteriormente, qual o valor aproximado de x e f(x) no ponto clicado. Os valores são aproximados porque a tela só aceita números inteiros para desenho e também porque a escala (explicação anterior) pode causar uma perda de precisão nos valores.
-	O clique desenha um ponto azul no local indicado pela função.
-	
- A base fornecida para o trabalho contém os seguintes métodos que podem ser utilizados:
- 
+	A ï¿½rea de desenho tem cerca de 800 por 650 pixels. Assim, valores muito maiores ou muito menores do que estes nï¿½meros podem ser difï¿½ceis de visualizar (ex, f(x)=xï¿½ e x=100).
+	Desta forma, vocï¿½ pode mudar a escala dos eixos X e Y dando valores nestas caixas de texto *antes* de adicionar os pontos ao grï¿½fico.
+ CLIQUE NA ï¿½REA DO GRï¿½FICO
+	Mostrarï¿½, a partir dos pontos inseridos anteriormente, qual o valor aproximado de x e f(x) no ponto clicado. Os valores sï¿½o aproximados porque a tela sï¿½ aceita nï¿½meros inteiros para desenho e tambï¿½m porque a escala (explicaï¿½ï¿½o anterior) pode causar uma perda de precisï¿½o nos valores.
+	O clique desenha um ponto azul no local indicado pela funï¿½ï¿½o.
+ A base fornecida para o trabalho contï¿½m os seguintes mï¿½todos que podem ser utilizados:
  protected void clear()
-	Limpa os pontos armazenados e a área de desenho.
-	
+	Limpa os pontos armazenados e a ï¿½rea de desenho.
  protected bool addPoint(float valX, float valY)
-	Adiciona um ponto em correspondente aos X e Y passados como parâmetro. Estes pontos serão escalados(multiplicados) de acordo com os valores constantes nas TextBox para melhor visualização do gráfico - um efeito parecido com um zoom. 
-	Em princípio, a área do desenho vai de -395 a 395 para X e -331 a 331 para Y (valores aproximados)
-	
+	Adiciona um ponto em correspondente aos X e Y passados como parï¿½metro. Estes pontos serï¿½o escalados(multiplicados) de acordo com os valores constantes nas TextBox para melhor visualizaï¿½ï¿½o do grï¿½fico - um efeito parecido com um zoom. 
+	Em princï¿½pio, a ï¿½rea do desenho vai de -395 a 395 para X e -331 a 331 para Y (valores aproximados)
 protected void sample()
-	Desenha uma curva da função f(x) = log x (log na base 2) como exemplo. Recomenda-se uma escala por volta de 40 a 50 para X e Y para melhor visualização, mas é interessante modificar os valores para entender como funciona.
-	
+	Desenha uma curva da funï¿½ï¿½o f(x) = log x (log na base 2) como exemplo. Recomenda-se uma escala por volta de 40 a 50 para X e Y para melhor visualizaï¿½ï¿½o, mas ï¿½ interessante modificar os valores para entender como funciona.
 protected void draw()
-	Desenha o gráfico com os pontos (x, y) inseridos por addPoint
-	
-	
+	Desenha o grï¿½fico com os pontos (x, y) inseridos por addPoint
  public void removePoint(int posx, int posy)
-	Remove um (ou mais) ponto que tenham a coordenada (posx, posy) indicada. Redesenha o polígono em seguida.
- 
+	Remove um (ou mais) ponto que tenham a coordenada (posx, posy) indicada. Redesenha o polï¿½gono em seguida.
  private void draw()
-    Limpa a área de desenho e desenha um polígono com os pontos atuais.
+    Limpa a ï¿½rea de desenho e desenha um polï¿½gono com os pontos atuais.

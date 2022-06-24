@@ -8,7 +8,9 @@ import java.util.Scanner;
 
 import classes.Termo;
 import classes.Documentos;
+import classes.EntradaTermos;
 import classes.HashTableStopWords;
+import classes.HashTableTermos;
 import classes.ListaDoc;
 import classes.Ordenacao;
 import classes.StopWord;
@@ -17,13 +19,24 @@ public class FroogleApp {
 	// DECLARANDO VARIAVEIS GLOBAIS->>
 	
 	//vetor de pontuações
-	static final String[] pontuacao = {",", ".", "!", "-", "_", ";"};
+	static final String[] pontuacao = {",", ".", "!", "-", "_", ";", "?"};
 
 	//arquivo de StopWords
 	static final String arqStopWords = "stopWords.txt";
 
 	//tabela Hash para StopWords
-	static HashTableStopWords table = new HashTableStopWords(263);
+	static HashTableStopWords tableStopWords = new HashTableStopWords(263);
+
+	//tabela Hash para StopWords
+	static HashTableTermos tableTermos = new HashTableTermos(3000017);
+
+	// pegar o vetor da tabela e o copia para poder ordenar, gravar no arquivo e mostrar para o usuário
+	static EntradaTermos[] dadosDaTabela = tableTermos.pegarTabela();
+	static Termo[] aTermos = new Termo[dadosDaTabela.length-1];
+	static int posicao = 0;
+
+	// variável para saber se o vetor já está ordenado
+	static boolean jaOrdenado = false;
 
 	// Nome do arquivo que tem os nomes dos arquivos usados para execução
 	static final String nomesDeArquivos = "nomesArquivos.txt";
@@ -31,15 +44,10 @@ public class FroogleApp {
 	// Nome do arquivo que contem todos os termos catalogados
 	static final String arquivoTermos = "termos.txt";
 
-	// variavel para controlar a posição do vetor de termos
-	static int posicao = 0;
-
 	// varaivel para atribuição de id(identificador) aos Termos
 	static int idTermo = 0;
 
-	// vetor de termos (ideal trocar por arrayList posteriormente)
-	static Termo[] aTermos = new Termo[1000];
-
+	// instancia da classe de ordenação
 	static Ordenacao ordenar = new Ordenacao();
 
 	// ------------------------------------------------------
@@ -55,14 +63,8 @@ public class FroogleApp {
 	 * @return vetor de termos com todos os termos criados
 	 * @throws InterruptedException 
 	 */
-	public static Termo[] criarTermos(Documentos nomesArquivos) throws FileNotFoundException {
-
+	public static void criarTermos(Documentos nomesArquivos) throws FileNotFoundException {
 		Scanner leitor = new Scanner(new File(nomesArquivos.Titulo));
-
-		/* variavel para receber as posições das palavras que se repetirem, quando as
-		 * mesmas forem encontradas
-		 */
-		int iPosicaoPalavraRepete = 0;
 
 		while (leitor.hasNext()) {// enquanto existir linhas para ler...
 
@@ -83,50 +85,34 @@ public class FroogleApp {
 				/* se o retorno for igual a null, significa que essa palavra
 				 * não esta na tabela de StopWords
 				 */
-				if (table.buscar(sPalavras[x]) == null) {
+				if (tableStopWords.buscar(sPalavras[x]) == null) {
 				
-					boolean bPalavraRepete = false;// variavel de controle
+					boolean palavraRepete = false;// variavel de controle
 
-					// variavel para controlar a leitura do vetor de termos 
-					int y = 0;
-
-					// laço para percorrer o vetor de termos enquanto ainda existirem termos salvos
-					while (aTermos[y] != null) {
-						if (aTermos[y].Palavra.equals(sPalavras[x])) {
-
-							bPalavraRepete = true;
-							iPosicaoPalavraRepete = y;
-							break;
-							// para a verificação quando é encontrada uma palavra igual, depois passa pra próxima
-						}
-						y++;
+					if (tableTermos.buscar(sPalavras[x]) != null) {
+						palavraRepete = true;
+						// para a verificação quando é encontrada uma palavra igual, depois passa pra próxima
 					}
 
-					if (bPalavraRepete) {
-						aTermos[iPosicaoPalavraRepete].NumeroDeOcorrencias++;
-						if (!aTermos[iPosicaoPalavraRepete].listaDoc.verificarSeExisteDoc(nomesArquivos, false)) {
-							aTermos[iPosicaoPalavraRepete].listaDoc.inserirDocNoFim(nomesArquivos);
+					if (palavraRepete) {
+						tableTermos.atualizarOcorrencias(sPalavras[x]);
+						if (!tableTermos.buscar(sPalavras[x]).listaDoc.verificarSeExisteDoc(nomesArquivos, false)) {
+							tableTermos.inserirDocumento(sPalavras[x], nomesArquivos);
 						}
 						else 
-							aTermos[iPosicaoPalavraRepete].listaDoc.fim.dado.ocorrenciasNesteDocOuValorDoDoc++;
+							tableTermos.atualizarOcorrenciasNoDoc(sPalavras[x]);
 					}
 					else {
 						Termo novoTermo = new Termo(idTermo, sPalavras[x], 1);// criando objeto termo
 						Documentos novoDocumento = new Documentos(nomesArquivos.IdDoc, nomesArquivos.Titulo, 1);
 						novoTermo.listaDoc.inserirDocNoFim(novoDocumento);
-						aTermos[posicao] = novoTermo;// vetor de Termos recebe termo criado
-						idTermo += 1;// Acresenta o id do termo conforme é criado.
-
-						/* a variável de controle de posição só é atualizada após ser criado um novo
-						 * termo
-						 */
-						posicao++;
+						tableTermos.inserir(novoTermo.Palavra, novoTermo);
+						idTermo ++;// Acresenta o id do termo conforme é criado.
 					}
 				}
 			}
 		}
 		leitor.close();// fechamento do scanner de arquivo
-		return aTermos;// retorna array de objetos Termos criados / catalogados
 	}
 
 	/**
@@ -165,48 +151,15 @@ public class FroogleApp {
 	 * @param pos (Posição do termo no vetor de termos (aTermos))
 	 * @return resultBusca (String com os dados do termo naquela posição)
 	 */
-	public static String exibirTermo(int pos) {
+	public static String exibirTermo(String palavraBuscada) {
 		// formatando os dados do termo encontrado para poder retorna-lo para o usario.
 		StringBuilder resultBusca = new StringBuilder("=============\n");
-		resultBusca.append("ID: " + aTermos[pos].IdTermo + "\n");
-		resultBusca.append("Termo: " + aTermos[pos].Palavra + "\n");
-		resultBusca.append("Repete-se: " + aTermos[pos].NumeroDeOcorrencias + " vezes" + "\n");
-		resultBusca.append(aTermos[pos].listaDoc.imprimir());
+		resultBusca.append("ID: " + tableTermos.buscar(palavraBuscada).IdTermo + "\n");
+		resultBusca.append("Termo: " + tableTermos.buscar(palavraBuscada).Palavra + "\n");
+		resultBusca.append("Repete-se: " + tableTermos.buscar(palavraBuscada).NumeroDeOcorrencias + " vezes" + "\n");
+		resultBusca.append(tableTermos.buscar(palavraBuscada).listaDoc.imprimir());
 
 		return resultBusca.toString();
-	}
-
-	/**
-	 * Método que formata uma string com a lista de documentos em que uma determinada
-	 * palavra-chave aparece
-	 * @param pos (Posição do termo no vetor de termos (aTermos))
-	 * @return resultBusca (String com a lista de documentos do termo naquela posição)
-	 */
-	public static String exibirDocs(int pos) {
-		// formatando os documentos do termo encontrado para poder retorna-lo para o usario.
-		StringBuilder resultBusca = new StringBuilder("");
-		resultBusca.append(aTermos[pos].listaDoc.imprimir());
-
-		return resultBusca.toString();
-	}
-
-	/**
-	 * Método que realiza uma busca no vetor de termos baseado na propriedade palavra
-	 * @param termoDigitado -> string (Termo) que se deseja buscar
-	 * @return int contendo a posição do termo procurado no vetor de termos ou -1, 
-	 * caso esse termo não exista
-	 */
-	public static int buscarTermo(String termoDigitado) {
-		int pos = 0;
-		for (Termo objto : aTermos) {// para cada objeto no vetor de termos
-			if (objto != null && objto.Palavra.equals(termoDigitado)) {
-				// retorna posição do TERMO:
-				return pos;
-			}
-			pos++;
-		}
-
-		return -1;
 	}
 
 	/**
@@ -217,14 +170,12 @@ public class FroogleApp {
 	 */
 	public static void inserirTermo(String palavra) {
 		// verifica se o Termo cadastrado já não existe no vetor de Termos
-		if (buscarTermo(palavra) == -1) {
+		if (tableTermos.buscar(palavra) == null) {
 			Termo novoTermo = new Termo(idTermo, palavra, 1);
 			idTermo++;// atualiza o id do termo.
-
-			aTermos[posicao] = novoTermo;
+			tableTermos.inserir(novoTermo.Palavra, novoTermo);
 			System.out.print("Termo inserido com sucesso!");
-			System.out.print("\nPalavra: " + aTermos[posicao].Palavra + "\nID:" + aTermos[posicao].IdTermo);
-			posicao++;// atualiza a variável global de controle de posições do vetor de Termos.
+			System.out.print("\nPalavra: " + novoTermo.Palavra + "\nID:" + novoTermo.IdTermo);
 		}
 
 		else {
@@ -239,16 +190,15 @@ public class FroogleApp {
 	 * quanto a que controla o id do termo (idTermo)
 	 * @return void
 	 */
-	public static void limparVetor() {
-		int i = 0;
-		while (aTermos[i] != null) {
+	public static void limparVetorETabela() {
+		for(int i = 0; i < aTermos.length; i++) {
 			aTermos[i] = null;
-			i++;
 		}
-		
+		tableTermos.limparTabela();
 		posicao = 0;
 		idTermo = 0;
 	}
+
 	// #endregion Termos&Relacionados.
 
 	// #region Arquivos
@@ -298,6 +248,14 @@ public class FroogleApp {
 			// catalogar e criar termos para cada arquivo passado como parâmetro
 			criarTermos(arq);
 		}
+
+		// copia a tabela para o vetor de termos
+		for (int i = 0; i < dadosDaTabela.length-1; i++) {
+			if (dadosDaTabela[i].palavra != null) {
+				aTermos[posicao] = dadosDaTabela[i].palavra;
+				posicao++;
+			}
+		}
 	}
 
 	/**
@@ -317,12 +275,8 @@ public class FroogleApp {
 
 		FileWriter sc = new FileWriter(arqTermos);
 
-		// ordena de forma decrescente os termos antes de salvar
-		ordenar.OrdenarTermos(aTermos, 0, posicao - 1);
-
-		for (Termo objt : aTermos) {
-			if (objt != null)
-				sc.write(objt.IdTermo + ";" + objt.Palavra + ";" + objt.NumeroDeOcorrencias + objt.listaDoc.toString() + "\n");
+		for (int i = 0; i < posicao -1; i++) {
+			sc.write(aTermos[i].IdTermo + ";" + aTermos[i].Palavra + ";" + aTermos[i].NumeroDeOcorrencias + aTermos[i].listaDoc.toString() + "\n");
 		}
 
 		sc.close();
@@ -356,9 +310,16 @@ public class FroogleApp {
 				termos.listaDoc.inserirDocNoFim(new Documentos(Integer.parseInt(dataTermos[i]), dataTermos[i + 1], Integer.parseInt(dataTermos[i + 2])));
 			}
 
-			aTermos[posicao] = termos;
-			posicao++;
+			tableTermos.inserir(termos.Palavra, termos);
 			idTermo++;
+		}
+
+		// copia a tabela para o vetor de termos
+		for (int i = 0; i < dadosDaTabela.length-1; i++) {
+			if (dadosDaTabela[i].palavra != null) {
+				aTermos[posicao] = dadosDaTabela[i].palavra;
+				posicao++;
+			}
 		}
 
 		lerTermos.close();
@@ -372,8 +333,8 @@ public class FroogleApp {
 	 * @param posicaoDoTermo -> posição do termo que contem a palavra-chave inserida
 	 * @param peso -> peso da palavra-chave inserida
 	 */
-	public static void inserirDocNaLista(ListaDoc lista, int posicaoDoTermo, int peso) {
-		String[] documentos = aTermos[posicaoDoTermo].listaDoc.toString().split(";");
+	public static void inserirDocNaLista(ListaDoc lista, Termo palavraChave, int peso) {
+		String[] documentos = palavraChave.listaDoc.toString().split(";");
 
 		for(int i = 3; i < documentos.length; i+=3) {
 			int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
@@ -393,21 +354,21 @@ public class FroogleApp {
 	 * @param posPalavra1 -> posição da palavra-chave 1
 	 * @param posPalavra2 -> posição da palavra-chave 2
 	 */
-	public static void imprimirDocumentos(Documentos[] arrayDocsParaImprimir, int posPalavra1, int posPalavra2) {
+	public static void imprimirDocumentos(Documentos[] arrayDocsParaImprimir, Termo palavraChave1, Termo palavraChave2) {
 		for (int i = 0; i < arrayDocsParaImprimir.length; i++) {
-			if (aTermos[posPalavra1].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false) && aTermos[posPalavra2].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
-				System.out.println("\nPALAVRA-CHAVE 1: " + aTermos[posPalavra1].Palavra + "\nPALAVRA-CHAVE 2: " + aTermos[posPalavra2].Palavra + "\n");
+			if (palavraChave1.listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false) && palavraChave2.listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
+				System.out.println("\nPALAVRA-CHAVE 1: " + palavraChave1.Palavra + "\nPALAVRA-CHAVE 2: " + palavraChave2.Palavra + "\n");
 				System.out.println("Aparece ambas no seguinte documento:");
 				System.out.println(arrayDocsParaImprimir[i].imprimir());
 			}
 			else {
-				if (aTermos[posPalavra1].listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
-					System.out.println("\nPALAVRA-CHAVE 1: " + aTermos[posPalavra1].Palavra + "\n");
+				if (palavraChave1.listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
+					System.out.println("\nPALAVRA-CHAVE 1: " + palavraChave1.Palavra + "\n");
 					System.out.println("Aparece no seguinte documento:");
 					System.out.println(arrayDocsParaImprimir[i].imprimir());
 				}
 				else {
-					System.out.println("\nPALAVRA-CHAVE 2: " + aTermos[posPalavra2].Palavra+ "\n");
+					System.out.println("\nPALAVRA-CHAVE 2: " + palavraChave2.Palavra+ "\n");
 					System.out.println("Aparece no seguinte documento:");
 					System.out.println(arrayDocsParaImprimir[i].imprimir());
 				}
@@ -477,8 +438,8 @@ public class FroogleApp {
 
 			opc1 = entrada.nextInt();// opt recebe a opção escolida
 
-			// receberá a posição dos termos buscados (opções 2 e 3)
-			int termoPos = 0;
+			// receberá o termo buscado (opções 2 e 3)
+			Termo termoBuscado = null;
 
 			switch (opc1) {// Switch na opção do usuario
 
@@ -510,10 +471,10 @@ public class FroogleApp {
 							termoProcurado = entrada.next();
 
 							// Procura e retorna a posição do termo ou -1 se o termo não existir
-							termoPos = buscarTermo(termoProcurado);
+							termoBuscado = tableTermos.buscar(termoProcurado);
 
-							if (termoPos != -1) {
-								System.out.println(exibirTermo(termoPos));
+							if (termoBuscado != null) {
+								System.out.println(exibirTermo(termoProcurado));
 							}
 
 							else {
@@ -523,6 +484,10 @@ public class FroogleApp {
 							break;
 
 						case 2:
+							if (!jaOrdenado) {
+								ordenar.OrdenarTermos(aTermos, 0, (posicao-1));
+								jaOrdenado = true;
+							}
 							mostrarTermos(aTermos);// mostrar todos os termos
 							break;
 
@@ -553,10 +518,10 @@ public class FroogleApp {
 								palavraChave = entrada.next();
 
 								// Procura e retorna a posição do termo ou -1 se o termo não existir
-								termoPos = buscarTermo(palavraChave);
+								termoBuscado = tableTermos.buscar(palavraChave);
 
-								if (termoPos != -1) {
-									System.out.println(exibirDocs(termoPos));
+								if (termoBuscado != null) {
+									System.out.println(termoBuscado.listaDoc.imprimir());
 								}
 
 								else {
@@ -578,7 +543,7 @@ public class FroogleApp {
 										 */
 										ListaDoc listaDocsParaImprimir = new ListaDoc();
 										int[] pesos = new int[2];
-										int posicaoPalavraChave1, posicaoPalavraChave2;
+										Termo palavraChave1 = null, palavraChave2 = null;
 
 										System.out.print("\n=> Entre com a primeira palavra-chave que deseja buscar nos documentos: ");
 										palavrasChave[0] = entrada.next();
@@ -592,17 +557,17 @@ public class FroogleApp {
 										System.out.print("\n=> Entre com o peso da segunda palavra-chave: ");
 										pesos[1] = entrada.nextInt();
 
-										posicaoPalavraChave1 = buscarTermo(palavrasChave[0]);
-										if (posicaoPalavraChave1 != -1) {
-											inserirDocNaLista(listaDocsParaImprimir, posicaoPalavraChave1, pesos[0]);
+										palavraChave1 = tableTermos.buscar(palavrasChave[0]);
+										if (palavraChave1 != null) {
+											inserirDocNaLista(listaDocsParaImprimir, palavraChave1, pesos[0]);
 										}
 										else {
 											System.out.print("\nPALAVRA-CHAVE 1: "+ palavrasChave[0] + "\nNão aparece em nenhum documento.\n");
 										}
 
-										posicaoPalavraChave2 = buscarTermo(palavrasChave[1]);
-										if (posicaoPalavraChave2 != -1) {
-											inserirDocNaLista(listaDocsParaImprimir, posicaoPalavraChave2, pesos[1]);
+										palavraChave2 = tableTermos.buscar(palavrasChave[1]);
+										if (palavraChave2 != null) {
+											inserirDocNaLista(listaDocsParaImprimir, palavraChave2, pesos[1]);
 										}
 										else {
 											System.out.print("\nPALAVRA-CHAVE 2: "+ palavrasChave[1] + "\nNão aparece em nenhum documento.\n");
@@ -617,7 +582,7 @@ public class FroogleApp {
 
 										ordenar.OrdenarDocumentos(arrayDocsParaImprimir, 0, arrayDocsParaImprimir.length-1);
 
-										imprimirDocumentos(arrayDocsParaImprimir, posicaoPalavraChave1, posicaoPalavraChave2);
+										imprimirDocumentos(arrayDocsParaImprimir, palavraChave1, palavraChave2);
 
 										break;
 
@@ -628,20 +593,20 @@ public class FroogleApp {
 										System.out.print("\n=> Entre com a segunda: ");
 										palavrasChave[1] = entrada.next();
 
-										termoPos = buscarTermo(palavrasChave[0]);
-										if (termoPos != -1) {
+										termoBuscado = tableTermos.buscar(palavrasChave[0]);
+										if (termoBuscado != null) {
 											System.out.println("\nPALAVRA-CHAVE 1: " + palavrasChave[0] +"\n");
-											System.out.println(exibirDocs(termoPos));
+											System.out.println(termoBuscado.listaDoc.imprimir());
 										}
 
 										else {
 											System.out.print("\nPALAVRA-CHAVE 1: "+ palavrasChave[0] + "\nNão aparece em nenhum documento.\n");
 										}
 
-										termoPos = buscarTermo(palavrasChave[1]);
-										if (termoPos != -1) {
+										termoBuscado = tableTermos.buscar(palavrasChave[1]);
+										if (termoBuscado != null) {
 											System.out.println("\nPALAVRA-CHAVE 2: " + palavrasChave[1] +"\n");
-											System.out.println(exibirDocs(termoPos));
+											System.out.println(termoBuscado.listaDoc.imprimir());
 										}
 
 										else {
@@ -677,7 +642,7 @@ public class FroogleApp {
 
 				case 5:
 					// ler e carregar arquivos catalogando os termos:
-					limparVetor();
+					limparVetorETabela();
 					carregarArquivos(carregarNomesDeArquivos());
 					System.out.print("Termos catalogados!");
 					break;
@@ -714,7 +679,7 @@ public class FroogleApp {
 	// #region Main
 	public static void main(String[] args) throws IOException {
 		//carregamos as StopWords para a Tabela Hash
-		carregarStopWords(table);
+		carregarStopWords(tableStopWords);
 
 		// carregar termos catalogados no arquivo texto(termos.txt) para o vetor de Termos
 		carregarTermosDoArq();

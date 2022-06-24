@@ -1,17 +1,17 @@
 package classes;
 
-public class EntradaStopWords {
+public class EntradaTermos {
 
     public String chave;
-    public StopWord palavra;
+    public Termo palavra;
     public boolean valido;
 
-    public EntradaStopWords(){
+    public EntradaTermos(){
         this.chave = "";
         this.palavra = null;
         this.unsetValido();
     }
-    public EntradaStopWords(String palavra, StopWord termoDaPalavra){
+    public EntradaTermos(String palavra, Termo termoDaPalavra){
         this.chave = palavra;
         this.palavra = termoDaPalavra;
         this.setValido();

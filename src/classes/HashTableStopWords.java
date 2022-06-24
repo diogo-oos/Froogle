@@ -2,7 +2,7 @@ package classes;
 
 public class HashTableStopWords {
     
-    public final int tam;// tamanho da tabela
+    public final int tam;
     public EntradaStopWords[] dados;
     public int pesos[];
 
@@ -43,7 +43,7 @@ public class HashTableStopWords {
         return newcode;
     }
     public int mapear(int codigo){
-        return codigo % tam;// posicao no mapa e o resto da divisao do codigo pelo tamanho
+        return codigo % tam;
     }
 
     public int localizar(String key){
@@ -52,7 +52,7 @@ public class HashTableStopWords {
         int indiceSondagem = 1;// indice para iniciar a sondagem quadratica
         while(dados[pos].valido && !key.equals(dados[pos].chave)){
             pos = mapear(pos + (indiceSondagem *segundoHash(calcHash)));
-            indiceSondagem++;   //indice de sondagem soma + 1
+            indiceSondagem++;// indice de sondagem soma + 1
         }
         return pos;// quando acha uma posicao vazia ou com a chave igual, retorna essa posicao
     }

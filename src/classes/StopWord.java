@@ -7,9 +7,4 @@ public class StopWord {
     public StopWord(String termo){
         this.valor = termo;
     }
-
-    public String getPalavra (){
-        return this.valor;
-    }
-
 }

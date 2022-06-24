@@ -1,10 +1,8 @@
 a) poderíamos usar uma lista de Vendas. A inserção deveria ser feito procurando-se a primeira venda do produto atual e inserindo antes dela (ou no fim da lista, se for o primeiro produto com aquele id)
-
 b) 
 void inserirVenda(Venda v){
 	Elemento novo = new Elemento(v);
 	Elemento aux = this.primeiro;
-	
 	while(aux != ultimo){
 		if(aux.prox.venda.idProduto == v.idProduto){
 			novo.prox = aux.prox;
@@ -16,15 +14,12 @@ void inserirVenda(Venda v){
 	aux.prox = novo;
 	this.ultimo = novo;	
 }
-
 ===================
 a) Podemos usar a fila atual e criamos uma fila nova. 
-
 b) 
 public Fila dividirFila(){
 	Fila nova = new Fila();
 	Elemento aux = this.primeiro;
-	
 	while(aux!=this.ultimo){
 		if((aux.prox.cliente.senha % 2) == 0)  //senha par
 			aux = aux.prox;
@@ -41,11 +36,8 @@ public Fila dividirFila(){
 }
 =======================
 a) A mão do usuário é uma lista. (ou um vetor de 4 listas, uma para cada naipe). Para funcionar, a inserção deve ser feita procurando-se primeiro o naipe e, em seguida, a posição dentro do naipe. 
-
 b) Considerando um vetor de 4 listas e os naipes: 0 - copas; 1 - ouros; 2 - espadas; 3 - paus
-
 public void guardarCarta(CartaDeBaralho c){
-
 	int lista;
 	switch(c.naipe.toLowerCase()){
 		case "copas": lista = 0;
@@ -59,16 +51,12 @@ public void guardarCarta(CartaDeBaralho c){
 		default: lista = 0; 		//não vai ser usado, mas o Java requer
 			break;
 	}
-	
 	ListaCartas insercao = maoJogador[lista];
-	
 	insercao.inserirNaOrdem(c);
 } 
-
 public void inserirNaOrdem(CartaDeBaralho c){
 	Elemento novo = new Elemento(c);
 	Elemento aux = this.primeiro;
-	
 	while(aux != ultimo){
 		if(aux.prox.numero<=c.numero){		//procura a primeira carta maior
 			novo.prox = aux.prox;
