@@ -44,6 +44,9 @@ public class FroogleApp {
 	// Nome do arquivo que contem todos os termos catalogados
 	static final String arquivoTermos = "termos.txt";
 
+	// Nome do arquivo que servirá para "printar" os termos
+	static final String aquivoParaImpressão = "termosImprimidos.txt";
+
 	// varaivel para atribuição de id(identificador) aos Termos
 	static int idTermo = 0;
 
@@ -127,18 +130,24 @@ public class FroogleApp {
 	 * 
 	 * @param aTermos -> vetor de termos criados
 	 * @return void
+	 * @throws IOException
 	 */
-	public static void mostrarTermos(Termo[] aTermos) {
-		for (Termo termos : aTermos) {
-			// verifica se existe termo na posição
-			if (termos != null) {
-				System.out.println("==================================");
-				System.out.println(
-						"\nID: " + termos.IdTermo + "\nTermo: " + termos.Palavra + "\nOcorrências: " + termos.NumeroDeOcorrencias + "\n"
-								+ termos.listaDoc.imprimir());
-				System.out.println("==================================");
-			}
+	public static void mostrarTermos(Termo[] aTermos) throws IOException {
+		// declarando arquivo termos.txt no java
+		File arqTermos = new File(aquivoParaImpressão);
+
+		FileWriter escrever = new FileWriter(arqTermos);
+
+		for (int i = 0; i < posicao -1; i++) {
+			StringBuilder imprimirTermos = new StringBuilder();
+			imprimirTermos.append("\nID: " + aTermos[i].IdTermo + "\nTermo: " + aTermos[i].Palavra + "\nOcorrências: " + aTermos[i].NumeroDeOcorrencias + "\n" + aTermos[i].listaDoc.imprimir());
+			imprimirTermos.append("\n");
+			imprimirTermos.append("==================================");
+			imprimirTermos.append("\n");
+			escrever.write(imprimirTermos.toString());
 		}
+
+		escrever.close();
 	}
 
 	/**
@@ -494,6 +503,7 @@ public class FroogleApp {
 								jaOrdenado = true;
 							}
 							mostrarTermos(aTermos);// mostrar todos os termos
+							System.out.println("\nAbra o arquivo \"termosImprimidos\" para ver os termos\n");
 							break;
 
 						default:
