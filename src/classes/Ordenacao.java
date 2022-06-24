@@ -27,11 +27,16 @@ public class Ordenacao {
             // p é o novo pivô (essa posição já está em seu lugar)
             int p = particionarTermo(aTermos, start, end);
 
-            // ou seja, iremos tentar ordenar as partições à esquesda
-            quicksortTermo(aTermos, start, p - 1);
-
-            // e à diretia dela
-            quicksortTermo(aTermos, p + 1, end);
+            if (p - start <= end-p) {
+                // ou seja, iremos tentar ordenar as partições à esquesda
+                quicksortTermo(aTermos, start, p - 1);
+                start = p;
+            }
+            else {
+                // e à diretia dela
+                quicksortTermo(aTermos, p + 1, end);
+                end = p;
+            }
         }
     }
 

@@ -37,11 +37,6 @@ public class HashTableTermos {
         }
     }
 
-    // public  int segundoHash(int code){
-    //     int newcode = code/32;
-    //     return newcode;
-    // }
-
     public int mapear(int codigo) {
         return codigo%tam;
     }
