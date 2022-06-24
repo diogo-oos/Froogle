@@ -131,7 +131,7 @@ public class ListaDoc {
         StringBuilder imprime = new StringBuilder();
         ElementoDoc aux = inicio;
         while (aux != null) {
-            imprime.append(";" + aux.dado.IdDoc + ";" + aux.dado.Titulo + ";" + aux.dado.ocorrenciasNesteDocOuValorDoDoc); 
+            imprime.append("`" + aux.dado.IdDoc + "`" + aux.dado.Titulo + "`" + aux.dado.ocorrenciasNesteDocOuValorDoDoc); 
                     
             aux = aux.proximo;
         }

@@ -31,19 +31,19 @@ public class HashTableTermos {
     }
 
     public void preencherPesos(){
-        this.pesos = new  int[5];
-        for (int i = 0; i <pesos.length ; i++) {
+        this.pesos = new int[5];
+        for (int i = 0; i < pesos.length ; i++) {
             this.pesos[i] = (i += 2);
         }
     }
 
-    public  int segundoHash(int code){
-        int newcode = code/32;
-        return newcode;
-    }
+    // public  int segundoHash(int code){
+    //     int newcode = code/32;
+    //     return newcode;
+    // }
 
-    public int mapear(int codigo){
-        return codigo % tam;
+    public int mapear(int codigo) {
+        return codigo%tam;
     }
 
     public int localizar(String key) {
@@ -51,11 +51,9 @@ public class HashTableTermos {
         int pos = mapear(calcHash);// descobre a posicao
         int indiceSondagem = 1;// indice para iniciar a sondagem quadratica
         while(dados[pos].valido && !key.toLowerCase().equals(dados[pos].chave.toLowerCase())){
-            pos = mapear(pos + (indiceSondagem *segundoHash(calcHash)));
+            pos = (pos + (indiceSondagem*indiceSondagem))%tam;
             indiceSondagem++;// indice de sondagem soma + 1
-            System.out.println("\n" + pos);
         }
-        System.out.println("\n" + "saiu");
         // quando acha uma posicao vazia ou com a chave igual, retorna essa posicao
         return pos;
     }
@@ -68,11 +66,13 @@ public class HashTableTermos {
 
     public Termo buscar(String chave){
         int pos = localizar(chave);// localiza a posicao da chave
+
         return dados[pos].palavra;// retorna o dado dentro da entrada
     }
 
     public void atualizarOcorrencias(String chave){
         int pos = localizar(chave);
+        
         dados[pos].palavra.NumeroDeOcorrencias++;
     }
 

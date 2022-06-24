@@ -19,7 +19,7 @@ public class FroogleApp {
 	// DECLARANDO VARIAVEIS GLOBAIS->>
 	
 	//vetor de pontuações
-	static final String[] pontuacao = {",", ".", "!", "-", "_", ";", "?"};
+	static final String[] pontuacao = {",", ".", "!", "_", ";", "?"};
 
 	//arquivo de StopWords
 	static final String arqStopWords = "stopWords.txt";
@@ -72,42 +72,44 @@ public class FroogleApp {
 			 * espaço em branco
 			 */
 			String[] sPalavras = leitor.nextLine().split(" ");
-		
 			// laço para percorrer todas as palavras da linha
 			for (int x = 0; x < sPalavras.length; x++) {
-				//percorrer pontuações para retirá-las das palavras 
-				for(int i = 0; i < pontuacao.length; i++){
-					if(sPalavras[x].contains(pontuacao[i])){
-						sPalavras[x] = sPalavras[x].substring(0,sPalavras[x].length()-1);
-					}
-				}
-				
-				/* se o retorno for igual a null, significa que essa palavra
-				 * não esta na tabela de StopWords
-				 */
-				if (tableStopWords.buscar(sPalavras[x]) == null) {
-				
-					boolean palavraRepete = false;// variavel de controle
-
-					if (tableTermos.buscar(sPalavras[x]) != null) {
-						palavraRepete = true;
-						// para a verificação quando é encontrada uma palavra igual, depois passa pra próxima
-					}
-
-					if (palavraRepete) {
-						tableTermos.atualizarOcorrencias(sPalavras[x]);
-						if (!tableTermos.buscar(sPalavras[x]).listaDoc.verificarSeExisteDoc(nomesArquivos, false)) {
-							tableTermos.inserirDocumento(sPalavras[x], nomesArquivos);
+				if(!(sPalavras[x].equals(""))) {// verificação necessário para espaços em branco
+					//percorrer pontuações para retirá-las das palavras 
+					for(int i = 0; i < pontuacao.length; i++){
+						if(sPalavras[x].contains(pontuacao[i])){
+							sPalavras[x] = sPalavras[x].substring(0,sPalavras[x].length()-1);
 						}
-						else 
-							tableTermos.atualizarOcorrenciasNoDoc(sPalavras[x]);
 					}
-					else {
-						Termo novoTermo = new Termo(idTermo, sPalavras[x], 1);// criando objeto termo
-						Documentos novoDocumento = new Documentos(nomesArquivos.IdDoc, nomesArquivos.Titulo, 1);
-						novoTermo.listaDoc.inserirDocNoFim(novoDocumento);
-						tableTermos.inserir(novoTermo.Palavra, novoTermo);
-						idTermo ++;// Acresenta o id do termo conforme é criado.
+
+					/* se o retorno for igual a null, significa que essa palavra
+					* não esta na tabela de StopWords
+					*/
+					if (tableStopWords.buscar(sPalavras[x]) == null) {
+
+						boolean palavraRepete = false;// variavel de controle
+
+						if (tableTermos.buscar(sPalavras[x]) != null) {
+							palavraRepete = true;
+							// para a verificação quando é encontrada uma palavra igual, depois passa pra próxima
+						}
+
+						if (palavraRepete) {
+							tableTermos.atualizarOcorrencias(sPalavras[x]);
+							if (!tableTermos.buscar(sPalavras[x]).listaDoc.verificarSeExisteDoc(nomesArquivos, false)) {
+								tableTermos.inserirDocumento(sPalavras[x], nomesArquivos);
+							}
+							else 
+								tableTermos.atualizarOcorrenciasNoDoc(sPalavras[x]);
+						}
+						else {
+							Termo novoTermo = new Termo(idTermo, sPalavras[x], 1);// criando objeto termo
+							Documentos novoDocumento = new Documentos(nomesArquivos.IdDoc, nomesArquivos.Titulo, 1);
+							novoTermo.listaDoc.inserirDocNoFim(novoDocumento);
+
+							tableTermos.inserir(novoTermo.Palavra, novoTermo);
+							idTermo ++;// Acresenta o id do termo conforme é criado.
+						}
 					}
 				}
 			}
@@ -244,9 +246,12 @@ public class FroogleApp {
 	 * @return void
 	 */
 	public static void carregarArquivos(Documentos[] nomesArquivos) throws FileNotFoundException {
+		int j =0;
 		for (Documentos arq : nomesArquivos) {
 			// catalogar e criar termos para cada arquivo passado como parâmetro
 			criarTermos(arq);
+			System.out.println("Passou o arquivo " + j + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			j++;
 		}
 
 		// copia a tabela para o vetor de termos
@@ -276,7 +281,7 @@ public class FroogleApp {
 		FileWriter sc = new FileWriter(arqTermos);
 
 		for (int i = 0; i < posicao -1; i++) {
-			sc.write(aTermos[i].IdTermo + ";" + aTermos[i].Palavra + ";" + aTermos[i].NumeroDeOcorrencias + aTermos[i].listaDoc.toString() + "\n");
+			sc.write(aTermos[i].IdTermo + "`" + aTermos[i].Palavra + "`" + aTermos[i].NumeroDeOcorrencias + aTermos[i].listaDoc.toString() + "\n");
 		}
 
 		sc.close();
@@ -294,7 +299,7 @@ public class FroogleApp {
 		String[] dataTermos;
 
 		while (lerTermos.hasNext()) {
-			dataTermos = lerTermos.nextLine().split(";");
+			dataTermos = lerTermos.nextLine().split("`");
 
 			// das posições 0 a 2, os dados são fixos
 			// IdTermo;Termo.palavra;Termo.NumeroDeOcorrencias;
@@ -334,7 +339,7 @@ public class FroogleApp {
 	 * @param peso -> peso da palavra-chave inserida
 	 */
 	public static void inserirDocNaLista(ListaDoc lista, Termo palavraChave, int peso) {
-		String[] documentos = palavraChave.listaDoc.toString().split(";");
+		String[] documentos = palavraChave.listaDoc.toString().split("`");
 
 		for(int i = 3; i < documentos.length; i+=3) {
 			int ocorrenciasNesteDocumento = Integer.parseInt(documentos[i]); 
@@ -686,7 +691,6 @@ public class FroogleApp {
 
 		// chamar Menu do usuario
 		menu();
-
 	}
 	// #endregion Main
 }
