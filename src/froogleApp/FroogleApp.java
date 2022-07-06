@@ -74,10 +74,10 @@ public class FroogleApp {
 			/* vetor para receber as palavras de cada linha do arquivo, separadas por um
 			 * espaço em branco
 			 */
-			String[] sPalavras = leitor.nextLine().split(" ");
+			String[] sPalavras = leitor.nextLine().split("[; ]");
 			// laço para percorrer todas as palavras da linha
 			for (int x = 0; x < sPalavras.length; x++) {
-				if(!(sPalavras[x].equals(""))) {// verificação necessário para espaços em branco
+				if(!(sPalavras[x].equals("") || sPalavras[x].length()<3)) {// verificação necessário para espaços em branco
 					//percorrer pontuações para retirá-las das palavras 
 					for(int i = 0; i < pontuacao.length; i++){
 						if(sPalavras[x].contains(pontuacao[i])){
@@ -370,23 +370,25 @@ public class FroogleApp {
 	 */
 	public static void imprimirDocumentos(Documentos[] arrayDocsParaImprimir, Termo palavraChave1, Termo palavraChave2) {
 		for (int i = 0; i < arrayDocsParaImprimir.length; i++) {
-			if (palavraChave1.listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false) && palavraChave2.listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
-				System.out.println("\nPALAVRA-CHAVE 1: " + palavraChave1.Palavra + "\nPALAVRA-CHAVE 2: " + palavraChave2.Palavra + "\n");
-				System.out.println("Aparece ambas no seguinte documento:");
-				System.out.println(arrayDocsParaImprimir[i].imprimir());
+			if (palavraChave1 != null && palavraChave2 != null) {
+				if (palavraChave1.listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false) && palavraChave2.listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
+					System.out.println("\nPALAVRA-CHAVE 1: " + palavraChave1.Palavra + "\nPALAVRA-CHAVE 2: " + palavraChave2.Palavra + "\n");
+					System.out.println("Aparece ambas no seguinte documento:");
+					System.out.println(arrayDocsParaImprimir[i].imprimir());
+				}
 			}
-			else {
-				if (palavraChave1.listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false)) {
+			if (palavraChave1 != null) {
+				if (palavraChave1.listaDoc.verificarSeExisteDoc(arrayDocsParaImprimir[i], false) && palavraChave1 != null) {
 					System.out.println("\nPALAVRA-CHAVE 1: " + palavraChave1.Palavra + "\n");
 					System.out.println("Aparece no seguinte documento:");
 					System.out.println(arrayDocsParaImprimir[i].imprimir());
 				}
-				else {
-					System.out.println("\nPALAVRA-CHAVE 2: " + palavraChave2.Palavra+ "\n");
-					System.out.println("Aparece no seguinte documento:");
-					System.out.println(arrayDocsParaImprimir[i].imprimir());
-				}
 			}
+			if(palavraChave2 != null) {
+				System.out.println("\nPALAVRA-CHAVE 2: " + palavraChave2.Palavra+ "\n");
+				System.out.println("Aparece no seguinte documento:");
+				System.out.println(arrayDocsParaImprimir[i].imprimir());
+			}			
 		}
 	}
 
@@ -437,8 +439,14 @@ public class FroogleApp {
 		// variavel de controle para o primeiro switch
 		int opc1 = 0;
 
+		// variavel para controle de save
+		boolean save = false;
+
+		// variavel para verificar saida do sistema
+		boolean sair = false;
+
 		// Opções do menu para o usuario.
-		while (opc1 != 7) {
+		while (!(sair)) {
 			System.out.println(
 					"\n======================================\n		FROOGLE \n======================================\n");
 
@@ -461,6 +469,7 @@ public class FroogleApp {
 					// escrever os termos no vetor aTermos no arquivo de termos formatado
 					escreverTermosNoArquivo();
 					System.out.print("Termos salvos com sucesso!");
+					save = true;
 					break;
 
 				case 2:
@@ -499,7 +508,7 @@ public class FroogleApp {
 
 						case 2:
 							if (!jaOrdenado) {
-								ordenar.OrdenarTermos(aTermos, 0, (posicao-1));
+								ordenar.OrdenarTermos(aTermos, posicao);
 								jaOrdenado = true;
 							}
 							mostrarTermos(aTermos);// mostrar todos os termos
@@ -597,6 +606,7 @@ public class FroogleApp {
 
 										ordenar.OrdenarDocumentos(arrayDocsParaImprimir, 0, arrayDocsParaImprimir.length-1);
 
+										
 										imprimirDocumentos(arrayDocsParaImprimir, palavraChave1, palavraChave2);
 
 										break;
@@ -674,8 +684,24 @@ public class FroogleApp {
 					break;
 
 				case 7:
-					limparTela();
-					System.out.println("\n\n==== OBRIGADO POR USAR O FROOGLE ==== > ==== VOLTE SEMPRE ====\n\n");
+					if(save) {
+						limparTela();
+						sair = true;
+						System.out.println("\n\n==== OBRIGADO POR USAR O FROOGLE ==== > ==== VOLTE SEMPRE ====\n\n");
+					}
+					else {
+						int opcao = 0;
+						System.out.println("Sair sem salvar? \n(1) - Sim \n(2) - Não");
+						opcao = entrada.nextInt();
+						if(opcao != 1) {
+							
+						}
+						else {
+							limparTela();
+							sair = true;
+							System.out.println("\n\n==== OBRIGADO POR USAR O FROOGLE ==== > ==== VOLTE SEMPRE ====\n\n");
+						}
+					}
 					break;
 
 				default:
